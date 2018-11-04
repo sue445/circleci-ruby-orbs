@@ -37,7 +37,7 @@ commands:
             set -xe
 
             set +e
-            bundle check
+            bundle check --path=<< parameters.bundle_path >>
             BUNDLE_CHECK=$?
             set -e
 
