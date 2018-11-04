@@ -7,23 +7,27 @@ commands:
       cache_key_prefix:
         type: string
         default: "v1-bundle"
+        description: "Key prefix of cache"
       bundle_jobs:
         type: integer
         default: 4
+        description: "Passed to `bundle install --jobs`"
       bundle_retry:
         type: integer
         default: 3
+        description: "Passed to `bundle install --retry`"
       bundle_path:
         type: string
         default: "vendor/bundle"
+        description: "Passed to `bundle install --path`"
       bundle_clean:
         type: boolean
         default: true
-        description: "Run bundle clean after bundle install"
+        description: " Whether run `bundle clean` after `bundle install`"
       restore_bundled_with:
         type: boolean
         default: true
-        description: "Resolve bundler version difference between Gemfile.lock and pre-installed in CI"
+        description: "Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI"
     steps:
       - restore_cache:
           keys:
