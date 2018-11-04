@@ -45,16 +45,10 @@ commands:
               bundle install --jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>
             fi
 
-      - run:
-          name: bundle clean
-          command: |
             <<# parameters.bundle_clean >>
             bundle clean
             <</ parameters.bundle_clean >>
 
-      - run:
-          name: restore-bundled-with
-          command: |
             <<# parameters.restore_bundled_with >>
             gem install restore_bundled_with --no-document
             restore-bundled-with
