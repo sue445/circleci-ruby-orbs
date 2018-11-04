@@ -1,0 +1,67 @@
+version: 2.1
+
+commands:
+  bundle-install:
+    description: "Setup bundle with cache"
+    parameters:
+      cache_key_prefix:
+        type: string
+        default: "v1-bundle"
+      bundle_jobs:
+        type: integer
+        default: 4
+      bundle_retry:
+        type: integer
+        default: 3
+      bundle_path:
+        type: string
+        default: "vendor/bundle"
+      bundle_clean:
+        type: boolean
+        default: true
+        description: "Run bundle clean after bundle install"
+      restore_bundled_with:
+        type: boolean
+        default: true
+        description: "Resolve bundler version difference between Gemfile.lock and pre-installed in CI"
+    steps:
+      - restore_cache:
+          keys:
+            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}
+            - << parameters.cache_key_prefix >>
+
+      - run:
+          name: bundle install
+          command: |
+            set -xe
+
+            set +e
+            bundle check
+            BUNDLE_CHECK=$?
+            set -e
+
+            if [ $BUNDLE_CHECK -ne 0 ]; then
+              bundle install --jobs=<< parameters.bundle_path >> --retry=<< parameters.bundle_retry >> --path << parameters.bundle_path >>
+            fi
+
+      - run:
+          name: bundle clean
+          command: |
+            <<# parameters.bundle_clean >>
+            bundle clean
+            <</ parameters.bundle_clean >>
+
+      - run:
+          name: restore-bundled-with
+          command: |
+            <<# parameters.restore_bundled_with >>
+            gem install restore_bundled_with --no-document
+            restore-bundled-with
+            <</ parameters.restore_bundled_with >>
+
+      - save_cache:
+          key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - << parameters.bundle_path >>
+
