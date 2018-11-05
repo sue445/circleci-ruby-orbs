@@ -15,18 +15,18 @@ jobs:
 workflows:
   version: 2
 
-  build:
-    jobs:
-      - validate
-
   # c.f. https://github.com/CircleCI-Public/hello-orb/blob/c43a73505b996c29688510b5d60d17130ae937b7/.circleci/config.yml
   btd:
     jobs:
+      - validate
+
       - orb-tools/pack:
           source-dir: src/
           destination-orb-path: packed/orb.yml
           workspace-path: packed/orb.yml
           artifact-path: packed/orb.yml
+          requires:
+            - validate
 
       - orb-tools/publish:
           orb-path: packed/orb.yml
