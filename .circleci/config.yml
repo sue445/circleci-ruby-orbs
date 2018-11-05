@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@2
+  sue445-bundle-install: sue445/bundle-install@volatile
 
 jobs:
   validate:
@@ -11,6 +12,20 @@ jobs:
     steps:
       - checkout
       - run: circleci orb validate src/orb.yml
+
+  smoke_test:
+    docker:
+      - image: circleci/ruby:2.5
+    working_directory: ~/app
+    steps:
+      - checkout
+      - sue445-bundle-install/bundle-install:
+          cache_key_prefix: "v1-bundle"
+          bundle_jobs: 4
+          bundle_retry: 3
+          bundle_path: "vendor/bundle"
+          bundle_clean: true
+          restore_bundled_with: true
 
 workflows:
   version: 2
@@ -36,6 +51,9 @@ workflows:
           checkout: false
           requires: [orb-tools/pack]
 
+      - smoke_test:
+          requires: [orb-tools/publish]
+
       - orb-tools/increment:
           orb-path: packed/orb.yml
           orb-ref: "sue445/bundle-install"
@@ -43,7 +61,7 @@ workflows:
           publish-token-variable: "$CIRCLECI_API_TOKEN"
           attach-workspace: true
           checkout: false
-          requires: [orb-tools/pack]
+          requires: [smoke_test]
           filters:
             branches:
               only: master
