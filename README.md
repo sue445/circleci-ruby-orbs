@@ -12,8 +12,6 @@ orbs:
   
 jobs:
   rspec:
-    <<: *default
-
     steps:
       - checkout
 
