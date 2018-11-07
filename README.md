@@ -23,6 +23,7 @@ jobs:
           bundle_retry: 3
           bundle_path: "vendor/bundle"
           bundle_clean: true
+          bundle_extra_args: ""
           restore_bundled_with: true
 
       # Add your job (e.g. rspec, rubocop)
@@ -34,5 +35,6 @@ jobs:
 * `bundle_jobs` : Passed to `bundle install --jobs` (default: `4`)
 * `bundle_retry` : Passed to `bundle install --retry` (default: `3`)
 * `bundle_path` : Passed to `bundle install --path` (default: `vendor/bundle`)
-* `bundle_clean` : Whether run `bundle clean` after `bundle install` (default: `true`)
+* `bundle_clean` : Whether pass `--clean` to `bundle install` (default: `true`)
+* `bundle_extra_args` : Arguments to pass to `bundle install` (defaut: `""`)
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
