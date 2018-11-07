@@ -65,4 +65,3 @@ commands:
           key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
           paths:
             - << parameters.bundle_path >>
-
