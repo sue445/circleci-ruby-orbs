@@ -29,6 +29,8 @@ jobs:
           no_output_timeout: 5m
           command: |
             export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}"
+            echo "Smoke test branch: https://github.com/sue445/circleci-orb-bundle-install-test/commits/${SMOKE_BRANCH}"
+
             curl https://circleci.com/api/v1.1/project/github/sue445/circleci-orb-bundle-install-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json
             BUILD_URL=$(cat build-result.json | jq -r '.[0].build_url')
             echo "Monitoring Build: $BUILD_URL for status"
