@@ -40,7 +40,8 @@ commands:
           command: |
             set -xe
 
-            bundle install --jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>
+            bundle_install_args=" --jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>"
+            bundle install $bundle_install_args
 
             <<# parameters.bundle_clean >>
             bundle clean
