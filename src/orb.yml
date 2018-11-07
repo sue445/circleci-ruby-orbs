@@ -40,14 +40,7 @@ commands:
           command: |
             set -xe
 
-            set +e
-            bundle check --path=<< parameters.bundle_path >>
-            BUNDLE_CHECK=$?
-            set -e
-
-            if [ $BUNDLE_CHECK -ne 0 ]; then
-              bundle install --jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>
-            fi
+            bundle install --jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>
 
             <<# parameters.bundle_clean >>
             bundle clean
