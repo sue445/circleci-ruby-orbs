@@ -8,8 +8,8 @@
 version: 2.1
 
 orbs:
-  sue445-bundle-install: sue445/bundle-install@volatile
-  
+  sue445-bundle-install: sue445/bundle-install@0.1.0
+
 jobs:
   rspec:
     steps:
