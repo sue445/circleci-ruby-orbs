@@ -23,7 +23,11 @@ commands:
       bundle_clean:
         type: boolean
         default: true
-        description: " Whether run `bundle clean` after `bundle install`"
+        description: "Whether pass `--clean` to `bundle install`"
+      bundle_extra_args:
+        type: string
+        default: ""
+        description: "Arguments to pass to `bundle install`"
       restore_bundled_with:
         type: boolean
         default: true
@@ -39,19 +43,18 @@ commands:
           name: bundle install
           command: |
             set -xe
-
-            set +e
-            bundle check --path=<< parameters.bundle_path >>
-            BUNDLE_CHECK=$?
-            set -e
-
-            if [ $BUNDLE_CHECK -ne 0 ]; then
-              bundle install --jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>
-            fi
+            bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>"
 
             <<# parameters.bundle_clean >>
-            bundle clean
+            bundle_install_args="$bundle_install_args --clean"
             <</ parameters.bundle_clean >>
+
+            bundle_extra_args="<< parameters.bundle_extra_args >>"
+            if [ -n "$bundle_extra_args" ]; then
+              bundle_install_args="$bundle_install_args $bundle_extra_args"
+            fi
+
+            bundle install $bundle_install_args
 
             <<# parameters.restore_bundled_with >>
             gem install restore_bundled_with --no-document
@@ -62,4 +65,3 @@ commands:
           key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
           paths:
             - << parameters.bundle_path >>
-
