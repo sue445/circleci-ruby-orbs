@@ -103,6 +103,9 @@ workflows:
           artifact-path: packed/orb.yml
           requires:
             - validate
+          filters:
+            tags:
+              only: /.*/
 
       - orb-tools/publish:
           orb-path: packed/orb.yml
@@ -111,3 +114,6 @@ workflows:
           attach-workspace: true
           checkout: false
           requires: [orb-tools/pack]
+          filters:
+            tags:
+              only: /.*/
