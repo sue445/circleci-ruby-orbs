@@ -1,5 +1,7 @@
 version: 2.1
 
+description: "bundle install with cache"
+
 commands:
   bundle-install:
     description: "Setup bundle with cache"

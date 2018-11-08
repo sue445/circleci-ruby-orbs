@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@2
+  orb-tools: circleci/orb-tools@2.0.2
 
 jobs:
   validate:
@@ -10,7 +10,8 @@ jobs:
     working_directory: ~/app
     steps:
       - checkout
-      - run: circleci orb validate src/orb.yml
+      - orb-tools/validate:
+          orb-path: "src/orb.yml"
 
   smoke_test:
     # c.f. https://github.com/CircleCI-Public/artifactory-orb/blob/39e72bee4c884eae0adde4c3204f0e18d727bc4b/.circleci/config.yml
