@@ -19,7 +19,7 @@ https://circleci.com/orbs/registry/orb/sue445/ruby-orbs
 version: 2.1
 
 orbs:
-  ruby-orbs: sue445/ruby-orbs@1.0.1
+  ruby-orbs: sue445/ruby-orbs@1.0.11
 
 jobs:
   rspec:
