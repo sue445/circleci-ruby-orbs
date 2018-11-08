@@ -78,17 +78,17 @@ workflows:
       - smoke_test:
           requires: [orb-tools/publish]
 
-#      - orb-tools/increment:
-#          orb-path: packed/orb.yml
-#          orb-ref: "sue445/ruby-orbs"
-#          segment: "patch"
-#          publish-token-variable: "$CIRCLECI_API_TOKEN"
-#          attach-workspace: true
-#          checkout: false
-#          requires: [orb-tools/pack]
-#          filters:
-#            branches:
-#              only: master
+      - orb-tools/increment:
+          orb-path: packed/orb.yml
+          orb-ref: "sue445/ruby-orbs"
+          segment: "patch"
+          publish-token-variable: "$CIRCLECI_API_TOKEN"
+          attach-workspace: true
+          checkout: false
+          requires: [orb-tools/pack]
+          filters:
+            branches:
+              only: master
 
   release:
     jobs:
