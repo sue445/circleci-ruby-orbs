@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@2
+  orb-tools: circleci/orb-tools@2.0.2
 
 jobs:
   validate:
@@ -10,7 +10,8 @@ jobs:
     working_directory: ~/app
     steps:
       - checkout
-      - run: circleci orb validate src/orb.yml
+      - orb-tools/validate:
+          orb-path: "src/orb.yml"
 
   smoke_test:
     # c.f. https://github.com/CircleCI-Public/artifactory-orb/blob/39e72bee4c884eae0adde4c3204f0e18d727bc4b/.circleci/config.yml
@@ -29,13 +30,13 @@ jobs:
           no_output_timeout: 5m
           command: |
             export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}"
-            echo "Smoke test branch: https://github.com/sue445/circleci-orb-bundle-install-test/commits/${SMOKE_BRANCH}"
+            echo "Smoke test branch: https://github.com/sue445/circleci-ruby-orbs-test/commits/${SMOKE_BRANCH}"
 
-            curl https://circleci.com/api/v1.1/project/github/sue445/circleci-orb-bundle-install-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json
+            curl https://circleci.com/api/v1.1/project/github/sue445/circleci-ruby-orbs-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json
             BUILD_URL=$(cat build-result.json | jq -r '.[0].build_url')
             echo "Monitoring Build: $BUILD_URL for status"
             while true; do
-              curl https://circleci.com/api/v1.1/project/github/sue445/circleci-orb-bundle-install-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json
+              curl https://circleci.com/api/v1.1/project/github/sue445/circleci-ruby-orbs-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json
               LIFECYCLE=$(cat build-result.json | jq -r '.[0].lifecycle')
               if [ "$LIFECYCLE" == "finished" ];then
                 STATUS=$(cat build-result.json | jq -r '.[0].status')
@@ -68,7 +69,7 @@ workflows:
 
       - orb-tools/publish:
           orb-path: packed/orb.yml
-          orb-ref: "sue445/bundle-install@dev:${CIRCLE_SHA1}"
+          orb-ref: "sue445/ruby-orbs@dev:${CIRCLE_SHA1}"
           publish-token-variable: "$CIRCLECI_API_TOKEN"
           attach-workspace: true
           checkout: false
@@ -79,7 +80,7 @@ workflows:
 
 #      - orb-tools/increment:
 #          orb-path: packed/orb.yml
-#          orb-ref: "sue445/bundle-install"
+#          orb-ref: "sue445/ruby-orbs"
 #          segment: "patch"
 #          publish-token-variable: "$CIRCLECI_API_TOKEN"
 #          attach-workspace: true
@@ -113,7 +114,7 @@ workflows:
 
       - orb-tools/publish:
           orb-path: packed/orb.yml
-          orb-ref: "sue445/bundle-install@${CIRCLE_TAG}"
+          orb-ref: "sue445/ruby-orbs@${CIRCLE_TAG}"
           publish-token-variable: "$CIRCLECI_API_TOKEN"
           attach-workspace: true
           checkout: false
