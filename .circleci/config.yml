@@ -13,6 +13,23 @@ jobs:
       - orb-tools/validate:
           orb-path: "src/orb.yml"
 
+  push_latest_version_tag:
+    docker:
+      - image: circleci/ruby:2.5
+    working_directory: ~/app
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "43:39:3a:d1:90:49:a4:85:db:17:41:ce:88:55:44:92"
+      - run: curl -fLSs https://circle.ci/cli | sudo bash
+      - run:
+          name: Setup git
+          command: |
+            git config user.email "$EMAIL"
+            git config user.name "CircleCI"
+      - run: ruby .circleci/push_latest_version_tag.rb sue445/ruby-orbs
+
   smoke_test:
     # c.f. https://github.com/CircleCI-Public/artifactory-orb/blob/39e72bee4c884eae0adde4c3204f0e18d727bc4b/.circleci/config.yml
     docker:
@@ -86,9 +103,17 @@ workflows:
           attach-workspace: true
           checkout: false
           requires: [orb-tools/pack]
-          filters:
-            branches:
-              only: master
+#          filters:
+#            branches:
+#              only: master
+
+      - push_latest_version_tag:
+          requires: [orb-tools/increment]
+#          filters:
+#            branches:
+#              only: master
+#            tags:
+#              ignore: /.*/
 
   release:
     jobs:
