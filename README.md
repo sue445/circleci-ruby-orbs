@@ -3,7 +3,8 @@ CircleCI orb for bundle install
 
 https://circleci.com/orbs/registry/orb/sue445/bundle-install
 
-[![CircleCI](https://circleci.com/gh/sue445/circleci-orb-bundle-install/tree/master.svg?style=svg&circle-token=b1e09093e5f09f91180578edef6fa57e442d11e1)](https://circleci.com/gh/sue445/circleci-orb-bundle-install/tree/master)
+[![CircleCI](https://circleci.com/gh/sue445/circleci-ruby-orbs/tree/master.svg?style=svg)](https://circleci.com/gh/sue445/circleci-ruby-orbs/tree/master)
+
 
 ## Requirements
 * Ruby and bundler
