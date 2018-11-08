@@ -1,7 +1,7 @@
-# circleci-orb-bundle-install
-CircleCI orb for bundle install
+# circleci-ruby-orbs
+CircleCI orb for ruby
 
-https://circleci.com/orbs/registry/orb/sue445/bundle-install
+https://circleci.com/orbs/registry/orb/sue445/ruby-orbs
 
 [![CircleCI](https://circleci.com/gh/sue445/circleci-ruby-orbs/tree/master.svg?style=svg)](https://circleci.com/gh/sue445/circleci-ruby-orbs/tree/master)
 
@@ -19,16 +19,16 @@ https://circleci.com/orbs/registry/orb/sue445/bundle-install
 version: 2.1
 
 orbs:
-  sue445-bundle-install: sue445/bundle-install@0.1.0
+  ruby-orbs: sue445/ruby-orbs@0.1.0
 
 jobs:
   rspec:
     steps:
       - checkout
 
-      - sue445-bundle-install/bundle-install
+      - ruby-orbs/bundle-install
       # or
-      - sue445-bundle-install/bundle-install:
+      - ruby-orbs/bundle-install:
           cache_key_prefix: "v1-bundle"
           bundle_jobs: 4
           bundle_retry: 3

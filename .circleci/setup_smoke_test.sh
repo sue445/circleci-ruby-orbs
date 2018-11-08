@@ -8,9 +8,9 @@ chmod 600 ~/.ssh/config
 
 export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}"
 
-git clone git@github.com:sue445/circleci-orb-bundle-install-test.git /tmp/circleci-orb-bundle-install-test
+git clone git@github.com:sue445/circleci-ruby-orbs-test.git /tmp/circleci-ruby-orbs-test
 
-cd /tmp/circleci-orb-bundle-install-test
+cd /tmp/circleci-ruby-orbs-test
 
 git config push.default current
 git config user.name "CircleCI"
