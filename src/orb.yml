@@ -39,8 +39,8 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}
+            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
+            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
             - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}
             - << parameters.cache_key_prefix >>
 
@@ -67,6 +67,6 @@ commands:
             <</ parameters.restore_bundled_with >>
 
       - save_cache:
-          key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
           paths:
             - << parameters.bundle_path >>
