@@ -132,19 +132,17 @@ workflows:
           attach-workspace: true
           checkout: false
           requires: [orb-tools/pack]
-# TODO: workflow test
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
 
       - push_latest_version_tag:
           requires: [orb-tools/increment]
-# TODO: workflow test
-#          filters:
-#            branches:
-#              only: master
-#            tags:
-#              ignore: /.*/
+          filters:
+            branches:
+              only: master
+            tags:
+              ignore: /.*/
 
   release:
     jobs:
