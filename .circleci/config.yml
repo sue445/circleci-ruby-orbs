@@ -58,6 +58,7 @@ jobs:
               curl -X POST "https://circleci.com/api/v1.1/project/github/${REPO_NAME}/${CIRCLE_BUILD_NUM}/cancel?circle-token=${CIRCLECI_API_TOKEN}"
               echo "Build is canceled because ${CIRCLE_TAG} is already released"
             fi
+            exit 0
 
   smoke_test:
     # c.f. https://github.com/CircleCI-Public/artifactory-orb/blob/39e72bee4c884eae0adde4c3204f0e18d727bc4b/.circleci/config.yml
@@ -158,7 +159,7 @@ workflows:
             - version_check
           filters:
             tags:
-              only: /$[0-9.]+$/
+              only: /^[0-9.]+$/
             branches:
               ignore: /.*/
 
