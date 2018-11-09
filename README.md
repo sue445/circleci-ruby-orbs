@@ -13,14 +13,24 @@ https://circleci.com/orbs/registry/orb/sue445/ruby-orbs
   * Not supported if `Gemfile.lock` is not committed (e.g. gem repo)
 
 ## Usage
-### bundle-install
+### Common setting
 ```yml
 # .circleci/config.yml
 version: 2.1
 
 orbs:
+  # Use specific version
+  # see. https://github.com/sue445/circleci-ruby-orbs/releases
   ruby-orbs: sue445/ruby-orbs@1.0.11
 
+  # or
+  # Use latest version
+  # ruby-orbs: sue445/ruby-orbs@volatile
+```
+
+### bundle-install
+```yml
+# .circleci/config.yml
 jobs:
   rspec:
     steps:
