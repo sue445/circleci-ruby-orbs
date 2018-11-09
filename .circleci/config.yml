@@ -151,7 +151,7 @@ workflows:
       - version_check:
           filters:
             tags:
-              only: /[0-9.]+/
+              only: /^[0-9.]+$/
             branches:
               ignore: /.*/
 
@@ -160,7 +160,7 @@ workflows:
             - version_check
           filters:
             tags:
-              only: /[0-9.]+/
+              only: /$[0-9.]+$/
             branches:
               ignore: /.*/
 
@@ -173,7 +173,7 @@ workflows:
             - validate
           filters:
             tags:
-              only: /[0-9.]+/
+              only: /^[0-9.]+$/
             branches:
               ignore: /.*/
 
@@ -186,6 +186,6 @@ workflows:
           requires: [orb-tools/pack]
           filters:
             tags:
-              only: /[0-9.]+/
+              only: /^[0-9.]+$/
             branches:
               ignore: /.*/
