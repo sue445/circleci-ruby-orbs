@@ -1,6 +1,8 @@
 version: 2.1
 
-description: "bundle install with cache"
+description: |
+  CircleCI orb for ruby.
+  https://github.com/sue445/circleci-ruby-orbs
 
 commands:
   bundle-install:
