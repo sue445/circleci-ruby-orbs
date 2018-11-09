@@ -31,6 +31,34 @@ jobs:
             git config user.name "CircleCI"
       - run: ruby .circleci/push_latest_version_tag.rb sue445/ruby-orbs
 
+  version_check:
+    docker:
+      - image: circleci/circleci-cli
+    working_directory: ~/app
+    steps:
+      - checkout
+      - run:
+          name: "Cancel build if already released"
+          environment:
+            ORB_REF:   "sue445/ruby-orbs"
+            REPO_NAME: "sue445/circleci-ruby-orbs"
+          command: |
+            if [ -z "$CIRCLE_TAG" ]; then
+              echo '$CIRCLE_TAG is required'
+              exit 1
+            fi
+
+            set +e
+            circleci orb info ${ORB_REF}@${CIRCLE_TAG}
+            ret=$?
+            set -e
+
+            echo $ret
+            if [ $ret -eq 0 ]; then
+              curl -X POST "https://circleci.com/api/v1.1/project/github/${REPO_NAME}/${CIRCLE_BUILD_NUM}/cancel?circle-token=${CIRCLECI_API_TOKEN}"
+              echo "Build is canceled because ${CIRCLE_TAG} is already released"
+            fi
+
   smoke_test:
     # c.f. https://github.com/CircleCI-Public/artifactory-orb/blob/39e72bee4c884eae0adde4c3204f0e18d727bc4b/.circleci/config.yml
     docker:
@@ -120,7 +148,16 @@ workflows:
 
   release:
     jobs:
+      - version_check:
+          filters:
+            tags:
+              only: /[0-9.]+/
+            branches:
+              ignore: /.*/
+
       - validate:
+          requires:
+            - version_check
           filters:
             tags:
               only: /[0-9.]+/
