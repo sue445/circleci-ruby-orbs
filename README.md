@@ -59,3 +59,7 @@ jobs:
 * `bundle_clean` : Whether pass `--clean` to `bundle install` (default: `true`)
 * `bundle_extra_args` : Arguments to pass to `bundle install` (defaut: `""`)
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
+
+## External
+* Smoke test repository for circleci-ruby-orbs
+  * https://github.com/sue445/circleci-ruby-orbs-test
