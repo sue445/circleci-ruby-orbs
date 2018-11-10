@@ -61,10 +61,15 @@ commands:
 
             bundle install $bundle_install_args
 
-            <<# parameters.restore_bundled_with >>
-            gem install restore_bundled_with --no-document
-            restore-bundled-with
-            <</ parameters.restore_bundled_with >>
+      - when:
+          condition: << parameters.restore_bundled_with >>
+          steps:
+            - run:
+                name: "restore-bundled-with"
+                command: |
+                  set -xe
+                  gem install restore_bundled_with --no-document
+                  restore-bundled-with
 
       - save_cache:
           key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
