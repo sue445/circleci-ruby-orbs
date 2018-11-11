@@ -72,8 +72,11 @@ commands:
                 name: "restore-bundled-with"
                 command: |
                   set -xe
-                  gem install restore_bundled_with --no-document
-                  restore-bundled-with
+
+                  if [ "<< parameters.bundle_gemfile >>" == "Gemfile" ]; then
+                    gem install restore_bundled_with --no-document
+                    restore-bundled-with
+                  fi
 
       - save_cache:
           key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
