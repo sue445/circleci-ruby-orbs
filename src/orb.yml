@@ -24,6 +24,10 @@ commands:
         type: string
         default: "vendor/bundle"
         description: "Passed to `bundle install --path`"
+      bundle_gemfile:
+        type: string
+        default: "Gemfile"
+        description: "Passed to `bundle install --gemfile`"
       bundle_clean:
         type: boolean
         default: true
@@ -39,8 +43,8 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
-            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
+            - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}
             - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}
             - << parameters.cache_key_prefix >>
 
@@ -48,7 +52,7 @@ commands:
           name: bundle install
           command: |
             set -xe
-            bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >>"
+            bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >> --gemfile=<< parameters.bundle_gemfile >>"
 
             <<# parameters.bundle_clean >>
             bundle_install_args="$bundle_install_args --clean"
@@ -72,6 +76,6 @@ commands:
                   restore-bundled-with
 
       - save_cache:
-          key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
+          key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
           paths:
             - << parameters.bundle_path >>
