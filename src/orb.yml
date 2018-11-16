@@ -4,9 +4,42 @@ description: |
   CircleCI orb for ruby.
   https://github.com/sue445/circleci-ruby-orbs
 
+examples:
+  bundle-install:
+    description: |
+      Run `bundle install` using cache.
+
+    usage:
+      version: 2.1
+
+      orbs:
+        ruby-orbs: sue445/ruby-orbs@1.2.0
+
+      jobs:
+        rspec:
+          docker:
+            - image: circleci/ruby
+
+          steps:
+            - checkout
+
+            - ruby-orbs/bundle-install:
+                cache_key_prefix: "v1-bundle"
+                bundle_jobs: 4
+                bundle_retry: 3
+                bundle_path: "vendor/bundle"
+                bundle_gemfile: "Gemfile"
+                bundle_clean: true
+                bundle_extra_args: ""
+                restore_bundled_with: true
+
+            - run: bundle exec rspec
+
 commands:
   bundle-install:
-    description: "Setup bundle with cache"
+    description: |
+      Run `bundle install` using cache.
+
     parameters:
       cache_key_prefix:
         type: string

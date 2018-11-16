@@ -29,10 +29,15 @@ orbs:
 ```
 
 ### bundle-install
+Run `bundle install` using cache.
+
 ```yml
 # .circleci/config.yml
 jobs:
   rspec:
+    docker:
+      - image: circleci/ruby
+
     steps:
       - checkout
 
