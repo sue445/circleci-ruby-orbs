@@ -29,6 +29,8 @@ orbs:
 ```
 
 ### bundle-install
+Run `bundle install` using cache.
+
 ```yml
 # .circleci/config.yml
 jobs:

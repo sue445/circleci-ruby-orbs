@@ -6,7 +6,9 @@ description: |
 
 commands:
   bundle-install:
-    description: "Setup bundle with cache"
+    description: |
+      Run `bundle install` using cache.
+
     parameters:
       cache_key_prefix:
         type: string
