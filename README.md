@@ -88,7 +88,7 @@ workflows:
           pre-bundle-update-pr:
             - run:
                 name: "Set timezone to Asia/Tokyo"
-                command: "sudo timedatectl set-timezone Asia/Tokyo"
+                command: "sudo cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime"
           git_user_name: "yourname"
           git_user_email: "you@example.com"
           github_access_token: "$GITHUB_ACCESS_TOKEN"
