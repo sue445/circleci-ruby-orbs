@@ -237,11 +237,20 @@ commands:
             fi
 
       - run:
+          name: "Export environment variables"
+          command: |
+            if [ -n "<< parameters.github_access_token >>" ]; then
+              export GITHUB_ACCESS_TOKEN="<< parameters.github_access_token >>"
+            fi
+            if [ -n "<< parameters.enterprise_octokit_access_token >>" ]; then
+              export ENTERPRISE_OCTOKIT_ACCESS_TOKEN="<< parameters.enterprise_octokit_access_token >>"
+            fi
+            if [ -n "<< parameters.enterprise_octokit_api_endpoint >>" ]; then
+              export ENTERPRISE_OCTOKIT_API_ENDPOINT="<< parameters.enterprise_octokit_api_endpoint >>"
+            fi
+
+      - run:
           name: "Run `bundle update` and send PullRequest"
-          environment:
-            GITHUB_ACCESS_TOKEN:             "<< parameters.github_access_token >>"
-            ENTERPRISE_OCTOKIT_ACCESS_TOKEN: "<< parameters.enterprise_octokit_access_token >>"
-            ENTERPRISE_OCTOKIT_API_ENDPOINT: "<< parameters.enterprise_octokit_api_endpoint >>"
           no_output_timeout: "<< parameters.no_output_timeout >>"
           command: |
             set -xe
