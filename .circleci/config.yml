@@ -112,6 +112,8 @@ workflows:
           test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundle-install_test.yml
+            - orb-tools/local-test-build:
+                test-config-location: test/bundle-update-pr_test.yml
 
       - orb-tools/pack:
           source-dir: src/

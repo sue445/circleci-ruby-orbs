@@ -35,6 +35,37 @@ examples:
 
             - run: bundle exec rspec
 
+  bundle-update-pr:
+    description: |
+      Run `bundle update` and send PullRequest.
+      Uses https://github.com/masutaka/circleci-bundle-update-pr
+
+    usage:
+      version: 2.1
+
+      orbs:
+        ruby-orbs: sue445/ruby-orbs@1.2.0
+
+      workflows:
+        version: 2
+        nightly:
+          triggers:
+            - schedule:
+                cron: "00 10 * * 5"
+                filters:
+                  branches:
+                    only: master
+          jobs:
+            - ruby-orbs/bundle-update-pr:
+                image: "circleci/ruby:2.5.3"
+                pre-bundle-update-pr:
+                  - run:
+                      name: "Set timezone to Asia/Tokyo"
+                      command: "sudo timedatectl set-timezone Asia/Tokyo"
+                git_user_name: "CircleCI"
+                git_user_email: "you@example.com"
+                github_access_token: "$GITHUB_ACCESS_TOKEN"
+
 commands:
   bundle-install:
     description: |
@@ -115,3 +146,211 @@ commands:
           key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
           paths:
             - << parameters.bundle_path >>
+
+  install-circleci-bundle-update-pr:
+    description: |
+      Install circleci-bundle-update-pr.
+
+    parameters:
+      version:
+        type: string
+        default: ""
+        description: "circleci-bundle-update-pr vesion. default is latest"
+
+    steps:
+      - run:
+          name: "Install `circleci-bundle-update-pr`"
+          command: |
+            set -xe
+            args="--no-doc"
+
+            if [ -n "<< parameters.version >>" ]; then
+              args="$args --version << parameters.version >>"
+            fi
+
+            gem install circleci-bundle-update-pr $args
+
+  run-circleci-bundle-update-pr:
+    description: |
+      Run `circleci-bundle-update-pr`.
+
+    parameters:
+      assignees:
+        type: string
+        default: ""
+        description: "Assign the PR to them. (e.g. alice,bob,carol)"
+      reviewers:
+        type: string
+        default: ""
+        description: "Request PR review to them. (e.g. alice,bob,carol)"
+      labels:
+        type: string
+        default: ""
+        description: "Add labels to the PR (e.g. In Review, Update)"
+      duplicate:
+        type: boolean
+        default: false
+        description: "Make PR even if it has already existed"
+      git_user_name:
+        type: string
+        default: "$GIT_USER_NAME"
+        description: "Username for commit"
+      git_user_email:
+        type: string
+        default: "$GIT_USER_EMAIL"
+        description: "E-mail for commit"
+      branch:
+        type: string
+        default: "master"
+        description: "Space separated branches. (e.g. 'master develop topic')"
+      github_access_token:
+        type: string
+        default: "$GITHUB_ACCESS_TOKEN"
+        description: "Your GitHub personal access token"
+      enterprise_octokit_access_token:
+        type: string
+        default: "$ENTERPRISE_OCTOKIT_ACCESS_TOKEN"
+        description: "Your GitHub Enterprise personal access token"
+      enterprise_octokit_api_endpoint:
+        type: string
+        default: "$ENTERPRISE_OCTOKIT_API_ENDPOINT"
+        description: "Your GitHub Enterprise api endpoint (e.g. https://www.example.com/api/v3)"
+      no_output_timeout:
+        type: string
+        default: "10m"
+        description: "Elapsed time the command can run without output. (e.g. 20m, 1.25h, 5s)"
+
+    steps:
+      - run:
+          name: "Check params"
+          command: |
+            set -xe
+            if [ -z "<< parameters.git_user_name >>" ]; then
+              echo 'Either git_user_name or $GIT_USER_NAME is required'
+              exit 1
+            fi
+            if [ -z "<< parameters.git_user_email >>" ]; then
+              echo 'Either git_user_email or $GIT_USER_EMAIL is required'
+              exit 1
+            fi
+
+      - run:
+          name: "Run `bundle update` and send PullRequest"
+          environment:
+            GITHUB_ACCESS_TOKEN:             "<< parameters.github_access_token >>"
+            ENTERPRISE_OCTOKIT_ACCESS_TOKEN: "<< parameters.enterprise_octokit_access_token >>"
+            ENTERPRISE_OCTOKIT_API_ENDPOINT: "<< parameters.enterprise_octokit_api_endpoint >>"
+          no_output_timeout: "<< parameters.no_output_timeout >>"
+          command: |
+            set -xe
+
+            args="<< parameters.git_user_name >> << parameters.git_user_email >> << parameters.branch >>"
+
+            if [ -n "<< parameters.assignees >>" ]; then
+              args="$args --assignees << parameters.assignees >>"
+            fi
+
+            if [ -n "<< parameters.reviewers >>" ]; then
+              args="$args --reviewers << parameters.reviewers >>"
+            fi
+
+            if [ -n "<< parameters.labels >>" ]; then
+              args="$args --labels << parameters.labels >>"
+            fi
+
+            <<# parameters.duplicate >>
+            args="$args --duplicate"
+            <</ parameters.duplicate >>
+
+            circleci-bundle-update-pr $args
+
+jobs:
+  bundle-update-pr:
+    description: |
+      Run `bundle update` and send PullRequest.
+      Uses https://github.com/masutaka/circleci-bundle-update-pr
+    parameters:
+      image:
+        type: string
+        default: "circleci/ruby"
+        description: "Image for `bundle update`"
+      pre-bundle-update-pr:
+        type: steps
+        default: []
+        description: "Run steps before `circleci-bundle-update-pr`"
+      post-bundle-update-pr:
+        type: steps
+        default: []
+        description: "Run steps after `circleci-bundle-update-pr`"
+
+      # install-circleci-bundle-update-pr parameters
+      version:
+        type: string
+        default: ""
+        description: "circleci-bundle-update-pr vesion. default is latest"
+
+      # run-circleci-bundle-update-pr parameters
+      assignees:
+        type: string
+        default: ""
+        description: "Assign the PR to them. (e.g. alice,bob,carol)"
+      reviewers:
+        type: string
+        default: ""
+        description: "Request PR review to them. (e.g. alice,bob,carol)"
+      labels:
+        type: string
+        default: ""
+        description: "Add labels to the PR (e.g. In Review, Update)"
+      duplicate:
+        type: boolean
+        default: false
+        description: "Make PR even if it has already existed"
+      git_user_name:
+        type: string
+        default: "$GIT_USER_NAME"
+        description: "Username for commit"
+      git_user_email:
+        type: string
+        default: "$GIT_USER_EMAIL"
+        description: "E-mail for commit"
+      branch:
+        type: string
+        default: "master"
+        description: "Space separated branches. (e.g. `master develop topic`)"
+      github_access_token:
+        type: string
+        default: "$GITHUB_ACCESS_TOKEN"
+        description: "Your GitHub personal access token"
+      enterprise_octokit_access_token:
+        type: string
+        default: "$ENTERPRISE_OCTOKIT_ACCESS_TOKEN"
+        description: "Your GitHub Enterprise personal access token"
+      enterprise_octokit_api_endpoint:
+        type: string
+        default: "$ENTERPRISE_OCTOKIT_API_ENDPOINT"
+        description: "Your GitHub Enterprise api endpoint (e.g. https://www.example.com/api/v3)"
+      no_output_timeout:
+        type: string
+        default: "10m"
+        description: "Elapsed time the command can run without output. (e.g. 20m, 1.25h, 5s)"
+    docker:
+      - image: "<< parameters.image >>"
+    steps:
+      - checkout
+      - install-circleci-bundle-update-pr:
+          version: "<< parameters.version >>"
+      - steps: "<< parameters.pre-bundle-update-pr >>"
+      - run-circleci-bundle-update-pr:
+          assignees:                       "<< parameters.assignees >>"
+          reviewers:                       "<< parameters.reviewers >>"
+          labels:                          "<< parameters.labels >>"
+          duplicate:                       "<< parameters.duplicate >>"
+          git_user_name:                   "<< parameters.git_user_name >>"
+          git_user_email:                  "<< parameters.git_user_email >>"
+          branch:                          "<< parameters.branch >>"
+          github_access_token:             "<< parameters.github_access_token >>"
+          enterprise_octokit_access_token: "<< parameters.enterprise_octokit_access_token >>"
+          enterprise_octokit_api_endpoint: "<< parameters.enterprise_octokit_api_endpoint >>"
+          no_output_timeout:               "<< parameters.no_output_timeout >>"
+      - steps: "<< parameters.post-bundle-update-pr >>"
