@@ -77,7 +77,7 @@ steps:
   - checkout
   - install-circleci-bundle-update-pr:
       version: "<< parameters.version >>"
-  - steps: "<< parameters.pre-bundle-update-pr >>"
+  - steps: << parameters.pre-bundle-update-pr >>
   - run-circleci-bundle-update-pr:
       assignees:                       "<< parameters.assignees >>"
       reviewers:                       "<< parameters.reviewers >>"
@@ -90,4 +90,4 @@ steps:
       enterprise_octokit_access_token: "<< parameters.enterprise_octokit_access_token >>"
       enterprise_octokit_api_endpoint: "<< parameters.enterprise_octokit_api_endpoint >>"
       no_output_timeout:               "<< parameters.no_output_timeout >>"
-  - steps: "<< parameters.post-bundle-update-pr >>"
+  - steps: << parameters.post-bundle-update-pr >>
