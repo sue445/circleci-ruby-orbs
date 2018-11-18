@@ -83,6 +83,8 @@ workflows:
             branches:
               only: master
     jobs:
+      - ruby-orbs/bundle-update-pr
+      # or
       - ruby-orbs/bundle-update-pr:
           image: "circleci/ruby:2.5.3"
           pre-bundle-update-pr:
