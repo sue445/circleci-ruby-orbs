@@ -206,7 +206,9 @@ commands:
       github_access_token:
         type: string
         default: "$GITHUB_ACCESS_TOKEN"
-        description: "Your GitHub personal access token"
+        description: |
+          Your GitHub personal access token.
+          Go to your account's settings page (https://github.com/settings/tokens/new?description=circleci-bundle-update-pr%20token) and generate a personal access token with "repo" scope
       enterprise_octokit_access_token:
         type: string
         default: "$ENTERPRISE_OCTOKIT_ACCESS_TOKEN"
@@ -321,7 +323,9 @@ jobs:
       github_access_token:
         type: string
         default: "$GITHUB_ACCESS_TOKEN"
-        description: "Your GitHub personal access token"
+        description: |
+          Your GitHub personal access token.
+          Go to your account's settings page (https://github.com/settings/tokens/new?description=circleci-bundle-update-pr%20token) and generate a personal access token with "repo" scope
       enterprise_octokit_access_token:
         type: string
         default: "$ENTERPRISE_OCTOKIT_ACCESS_TOKEN"

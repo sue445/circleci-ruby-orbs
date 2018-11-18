@@ -107,6 +107,7 @@ workflows:
 * `git_user_email` : E-mail for commit (default. `$GIT_USER_EMAIL`)
 * `branch` : Space separated branches. (e.g. `master develop topic`) (default. `master`)
 * `github_access_token` : Your GitHub personal access token (default. `$GITHUB_ACCESS_TOKEN`)
+  * Go to [your account's settings page](https://github.com/settings/tokens/new?description=circleci-bundle-update-pr%20token) and generate a personal access token with "repo" scope
 * `enterprise_octokit_access_token` : Your GitHub Enterprise personal access token (default. `$ENTERPRISE_OCTOKIT_ACCESS_TOKEN`)
 * `enterprise_octokit_api_endpoint` : Your GitHub Enterprise api endpoint (e.g. https://www.example.com/api/v3) (default. `$ENTERPRISE_OCTOKIT_API_ENDPOINT`)
 * `no_output_timeout` : Elapsed time the command can run without output. (e.g. 20m, 1.25h, 5s) (default. `10m`)
