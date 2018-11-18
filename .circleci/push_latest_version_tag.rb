@@ -10,11 +10,5 @@ version = $1
 
 raise "Not found version in '#{result}'" unless version
 
-def system!(command)
-  puts command
-  ret = system(command)
-  raise "`#{command}` is failed" unless ret
-end
-
-system! "git tag -a #{version} -m 'Release #{version}'"
-system! "git push origin --tags"
+system "git tag -a #{version} -m 'Release #{version}'"
+system "git push origin --tags"
