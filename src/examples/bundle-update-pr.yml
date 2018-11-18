@@ -1,0 +1,29 @@
+description: |
+  Run `bundle update` and send PullRequest.
+  Uses https://github.com/masutaka/circleci-bundle-update-pr
+
+usage:
+  version: 2.1
+
+  orbs:
+    ruby-orbs: sue445/ruby-orbs@1.3.0
+
+  workflows:
+    version: 2
+    nightly:
+      triggers:
+        - schedule:
+            cron: "00 10 * * 5"
+            filters:
+              branches:
+                only: master
+      jobs:
+        - ruby-orbs/bundle-update-pr:
+            image: "circleci/ruby:2.5.3"
+            pre-bundle-update-pr:
+              - run:
+                  name: "Set timezone to Asia/Tokyo"
+                  command: "sudo cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime"
+            git_user_name: "CircleCI"
+            git_user_email: "you@example.com"
+            github_access_token: "$GITHUB_ACCESS_TOKEN"

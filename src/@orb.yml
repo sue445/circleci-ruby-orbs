@@ -1,0 +1,5 @@
+version: 2.1
+
+description: |
+  CircleCI orb for ruby.
+  https://github.com/sue445/circleci-ruby-orbs

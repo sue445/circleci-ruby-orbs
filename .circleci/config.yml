@@ -4,15 +4,6 @@ orbs:
   orb-tools: circleci/orb-tools@2.0.2
 
 jobs:
-  validate:
-    docker:
-      - image: circleci/circleci-cli
-    working_directory: ~/app
-    steps:
-      - checkout
-      - orb-tools/validate:
-          orb-path: "src/orb.yml"
-
   push_latest_version_tag:
     docker:
       - image: circleci/ruby:2.5
@@ -75,25 +66,24 @@ workflows:
   # c.f. https://github.com/CircleCI-Public/hello-orb/blob/c43a73505b996c29688510b5d60d17130ae937b7/.circleci/config.yml
   btd:
     jobs:
-      - validate
+      - orb-tools/pack:
+          source-dir: src/
+          destination-orb-path: packed/orb.yml
+          workspace-path: packed/orb.yml
+          artifact-path: packed/orb.yml
 
       - orb-tools/test-in-builds:
-          orb-location: src/orb.yml
+          orb-location: packed/orb.yml
           orb-name: ruby-orbs
           test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundle-install_test.yml
             - orb-tools/local-test-build:
                 test-config-location: test/bundle-update-pr_test.yml
-
-      - orb-tools/pack:
-          source-dir: src/
-          destination-orb-path: packed/orb.yml
-          workspace-path: packed/orb.yml
-          artifact-path: packed/orb.yml
+          attach-workspace: true
+          checkout: true
           requires:
-            - validate
-            - orb-tools/test-in-builds
+            - orb-tools/pack
 
       - orb-tools/publish:
           orb-path: packed/orb.yml
@@ -104,7 +94,7 @@ workflows:
           requires: [orb-tools/pack]
 
       - smoke_test:
-          requires: [orb-tools/publish]
+          requires: [orb-tools/test-in-builds]
 
       - orb-tools/increment:
           orb-path: packed/orb.yml
@@ -113,7 +103,7 @@ workflows:
           publish-token-variable: "$CIRCLECI_API_TOKEN"
           attach-workspace: true
           checkout: false
-          requires: [orb-tools/pack]
+          requires: [orb-tools/test-in-builds]
           filters:
             branches:
               only: master
@@ -136,22 +126,13 @@ workflows:
             branches:
               ignore: /.*/
 
-      - validate:
-          requires:
-            - hold_manual_release
-          filters:
-            tags:
-              only: /^[0-9.]+$/
-            branches:
-              ignore: /.*/
-
       - orb-tools/pack:
           source-dir: src/
           destination-orb-path: packed/orb.yml
           workspace-path: packed/orb.yml
           artifact-path: packed/orb.yml
           requires:
-            - validate
+            - hold_manual_release
           filters:
             tags:
               only: /^[0-9.]+$/
