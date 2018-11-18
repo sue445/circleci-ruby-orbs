@@ -4,15 +4,6 @@ orbs:
   orb-tools: circleci/orb-tools@2.0.2
 
 jobs:
-  validate:
-    docker:
-      - image: circleci/circleci-cli
-    working_directory: ~/app
-    steps:
-      - checkout
-      - orb-tools/validate:
-          orb-path: "src/orb.yml"
-
   push_latest_version_tag:
     docker:
       - image: circleci/ruby:2.5
@@ -75,8 +66,6 @@ workflows:
   # c.f. https://github.com/CircleCI-Public/hello-orb/blob/c43a73505b996c29688510b5d60d17130ae937b7/.circleci/config.yml
   btd:
     jobs:
-      - validate
-
       - orb-tools/test-in-builds:
           orb-location: src/orb.yml
           orb-name: ruby-orbs
@@ -92,7 +81,6 @@ workflows:
           workspace-path: packed/orb.yml
           artifact-path: packed/orb.yml
           requires:
-            - validate
             - orb-tools/test-in-builds
 
       - orb-tools/publish:
@@ -136,22 +124,13 @@ workflows:
             branches:
               ignore: /.*/
 
-      - validate:
-          requires:
-            - hold_manual_release
-          filters:
-            tags:
-              only: /^[0-9.]+$/
-            branches:
-              ignore: /.*/
-
       - orb-tools/pack:
           source-dir: src/
           destination-orb-path: packed/orb.yml
           workspace-path: packed/orb.yml
           artifact-path: packed/orb.yml
           requires:
-            - validate
+            - hold_manual_release
           filters:
             tags:
               only: /^[0-9.]+$/
