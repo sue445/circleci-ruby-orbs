@@ -57,7 +57,7 @@ jobs:
       - run: bundle exec rspec
 ```
 
-## Parameters
+#### Parameters
 * `cache_key_prefix` : Key prefix of cache (default: `v1-bundle`)
 * `bundle_jobs` : Passed to `bundle install --jobs` (default: `4`)
 * `bundle_retry` : Passed to `bundle install --retry` (default: `3`)
@@ -66,6 +66,50 @@ jobs:
 * `bundle_clean` : Whether pass `--clean` to `bundle install` (default: `true`)
 * `bundle_extra_args` : Arguments to pass to `bundle install` (defaut: `""`)
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
+
+### bundle-update-pr
+Run `bundle update` and send PullRequest.
+
+Uses https://github.com/masutaka/circleci-bundle-update-pr
+
+```yml
+workflows:
+  version: 2
+  nightly:
+    triggers:
+      - schedule:
+          cron: "00 10 * * 5"
+          filters:
+            branches:
+              only: master
+    jobs:
+      - ruby-orbs/bundle-update-pr:
+          image: "circleci/ruby:2.5.3"
+          pre-bundle-update-pr:
+            - run:
+                name: "Set timezone to Asia/Tokyo"
+                command: "sudo timedatectl set-timezone Asia/Tokyo"
+          git_user_name: "yourname"
+          git_user_email: "you@example.com"
+          github_access_token: "$GITHUB_ACCESS_TOKEN"
+```
+
+#### Parameters
+* `image` : Image for `bundle update` (default. `circleci/ruby`)
+* `pre-bundle-update-pr` : Run steps before `circleci-bundle-update-pr` (default. `[]`)
+* `post-bundle-update-pr` : Run steps after `circleci-bundle-update-pr` (default. `[]`)
+* `version` : circleci-bundle-update-pr vesion. (default. latest version)
+* `assignees` : Assign the PR to them. (e.g. alice,bob,carol) (default. `""`)
+* `reviewers` : Request PR review to them. (e.g. alice,bob,carol) (default. `""`)
+* `labels` : Add labels to the PR (e.g. In Review, Update) (default. `""`)
+* `duplicate` : Make PR even if it has already existed (default. `false`)
+* `git_user_name` : Username for commit (default. `$GIT_USER_NAME`)
+* `git_user_email` : E-mail for commit (default. `$GIT_USER_EMAIL`)
+* `branch` : Space separated branches. (e.g. `master develop topic`) (default. `master`)
+* `github_access_token` : Your GitHub personal access token (default. `$GITHUB_ACCESS_TOKEN`)
+* `enterprise_octokit_access_token` : Your GitHub Enterprise personal access token (default. `$ENTERPRISE_OCTOKIT_ACCESS_TOKEN`)
+* `enterprise_octokit_api_endpoint` : Your GitHub Enterprise api endpoint (e.g. https://www.example.com/api/v3) (default. `$ENTERPRISE_OCTOKIT_API_ENDPOINT`)
+* `no_output_timeout` : Elapsed time the command can run without output. (e.g. 20m, 1.25h, 5s) (default. `10m`)
 
 ## External
 * Smoke test repository for circleci-ruby-orbs
