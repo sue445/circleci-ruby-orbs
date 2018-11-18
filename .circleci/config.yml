@@ -118,24 +118,14 @@ workflows:
 
   release:
     jobs:
-      - hold_manual_release:
-          type: approval
-          filters:
-            tags:
-              only: /^[0-9.]+$/
-            branches:
-              ignore: /.*/
-
       - orb-tools/pack:
           source-dir: src/
           destination-orb-path: packed/orb.yml
           workspace-path: packed/orb.yml
           artifact-path: packed/orb.yml
-          requires:
-            - hold_manual_release
           filters:
             tags:
-              only: /^[0-9.]+$/
+              only: /^[0-9.]+\.0$/
             branches:
               ignore: /.*/
 
@@ -148,6 +138,6 @@ workflows:
           requires: [orb-tools/pack]
           filters:
             tags:
-              only: /^[0-9.]+$/
+              only: /^[0-9.]+\.0$/
             branches:
               ignore: /.*/
