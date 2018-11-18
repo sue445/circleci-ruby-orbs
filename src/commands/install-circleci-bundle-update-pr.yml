@@ -1,0 +1,21 @@
+description: |
+  Install circleci-bundle-update-pr.
+
+parameters:
+  version:
+    type: string
+    default: ""
+    description: "circleci-bundle-update-pr vesion. default is latest"
+
+steps:
+  - run:
+      name: "Install `circleci-bundle-update-pr`"
+      command: |
+        set -xe
+        args="--no-doc"
+
+        if [ -n "<< parameters.version >>" ]; then
+          args="$args --version << parameters.version >>"
+        fi
+
+        gem install circleci-bundle-update-pr $args

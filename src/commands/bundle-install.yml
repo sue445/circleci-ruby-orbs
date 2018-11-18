@@ -1,0 +1,79 @@
+description: |
+  Run `bundle install` using cache.
+
+parameters:
+  cache_key_prefix:
+    type: string
+    default: "v1-bundle"
+    description: "Key prefix of cache"
+  bundle_jobs:
+    type: integer
+    default: 4
+    description: "Passed to `bundle install --jobs`"
+  bundle_retry:
+    type: integer
+    default: 3
+    description: "Passed to `bundle install --retry`"
+  bundle_path:
+    type: string
+    default: "vendor/bundle"
+    description: "Passed to `bundle install --path`"
+  bundle_gemfile:
+    type: string
+    default: "Gemfile"
+    description: "Passed to `bundle install --gemfile`"
+  bundle_clean:
+    type: boolean
+    default: true
+    description: "Whether pass `--clean` to `bundle install`"
+  bundle_extra_args:
+    type: string
+    default: ""
+    description: "Arguments to pass to `bundle install`"
+  restore_bundled_with:
+    type: boolean
+    default: true
+    description: "Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI"
+
+steps:
+  - restore_cache:
+      keys:
+        - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
+        - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}
+        - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}
+        - << parameters.cache_key_prefix >>
+
+  - run:
+      name: bundle install
+      command: |
+        set -xe
+        bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >> --gemfile=<< parameters.bundle_gemfile >>"
+
+        <<# parameters.bundle_clean >>
+        bundle_install_args="$bundle_install_args --clean"
+        <</ parameters.bundle_clean >>
+
+        bundle_extra_args="<< parameters.bundle_extra_args >>"
+        if [ -n "$bundle_extra_args" ]; then
+          bundle_install_args="$bundle_install_args $bundle_extra_args"
+        fi
+
+        bundle install $bundle_install_args
+
+  - when:
+      condition: << parameters.restore_bundled_with >>
+      steps:
+        - run:
+            name: "restore-bundled-with"
+            command: |
+              set -xe
+
+              if [ "<< parameters.bundle_gemfile >>" == "Gemfile" ]; then
+                gem install restore_bundled_with --no-document
+                restore-bundled-with
+              fi
+
+  - save_cache:
+      key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
+      paths:
+        - << parameters.bundle_path >>
