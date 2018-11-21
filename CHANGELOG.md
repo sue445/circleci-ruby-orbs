@@ -1,5 +1,11 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.2.0...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.7...master)
+
+## v1.3.7
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.6...1.3.7)
+
+* Allow white space in git username
+  * https://github.com/sue445/circleci-ruby-orbs/pull/34
 
 ## v1.3.0
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.2.0...1.3.0)
