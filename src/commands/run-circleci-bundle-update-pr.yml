@@ -82,7 +82,7 @@ steps:
       command: |
         set -xe
 
-        args="<< parameters.git_user_name >> << parameters.git_user_email >> << parameters.branch >>"
+        args="'<< parameters.git_user_name >>' << parameters.git_user_email >> << parameters.branch >>"
 
         if [ -n "<< parameters.assignees >>" ]; then
           args="$args --assignees << parameters.assignees >>"
