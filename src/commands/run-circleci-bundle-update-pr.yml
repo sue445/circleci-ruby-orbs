@@ -28,7 +28,7 @@ parameters:
     description: "E-mail for commit"
   branch:
     type: string
-    default: "master"
+    default: "$CIRCLE_BRANCH"
     description: "Space separated branches. (e.g. 'master develop topic')"
   github_access_token:
     type: string
@@ -82,7 +82,11 @@ steps:
       command: |
         set -xe
 
-        args="'<< parameters.git_user_name >>' << parameters.git_user_email >> << parameters.branch >>"
+        args="'<< parameters.git_user_name >>' << parameters.git_user_email >>"
+
+        if [ -n "<< parameters.branch >>" ]; then
+          args="$args << parameters.branch >>"
+        fi
 
         if [ -n "<< parameters.assignees >>" ]; then
           args="$args --assignees << parameters.assignees >>"
