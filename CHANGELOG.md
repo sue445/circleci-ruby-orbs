@@ -1,5 +1,13 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.7...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.8...master)
+
+## v1.3.8
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.7...1.3.8)
+
+### `bundle-update-pr`
+* Change default value for `branch` parameter to CI current branch
+  * https://github.com/sue445/circleci-ruby-orbs/pull/36
+  * https://github.com/sue445/circleci-ruby-orbs/issues/35
 
 ## v1.3.7
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.6...1.3.7)
