@@ -49,7 +49,7 @@ parameters:
     description: "E-mail for commit"
   branch:
     type: string
-    default: "master"
+    default: "$CIRCLE_BRANCH"
     description: "Space separated branches. (e.g. `master develop topic`)"
   github_access_token:
     type: string

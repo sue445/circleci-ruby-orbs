@@ -108,7 +108,7 @@ workflows:
 * `duplicate` : Make PR even if it has already existed (default. `false`)
 * `git_user_name` : Username for commit (default. `$GIT_USER_NAME`)
 * `git_user_email` : E-mail for commit (default. `$GIT_USER_EMAIL`)
-* `branch` : Space separated branches. (e.g. `master develop topic`) (default. `master`)
+* `branch` : Space separated branches. (e.g. `master develop topic`) (default. `$CIRCLE_BRANCH`)
 * `github_access_token` : Your GitHub personal access token (default. `$GITHUB_ACCESS_TOKEN`)
   * Go to [your account's settings page](https://github.com/settings/tokens/new?description=circleci-bundle-update-pr%20token) and generate a personal access token with "repo" scope
 * `enterprise_octokit_access_token` : Your GitHub Enterprise personal access token (default. `$ENTERPRISE_OCTOKIT_ACCESS_TOKEN`)
