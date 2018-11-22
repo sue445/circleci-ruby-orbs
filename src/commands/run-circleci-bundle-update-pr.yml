@@ -82,7 +82,7 @@ steps:
       command: |
         set -xe
 
-        args="'<< parameters.git_user_name >>' << parameters.git_user_email >>"
+        args=""
 
         if [ -n "<< parameters.branch >>" ]; then
           args="$args << parameters.branch >>"
@@ -104,4 +104,4 @@ steps:
         args="$args --duplicate"
         <</ parameters.duplicate >>
 
-        circleci-bundle-update-pr $args
+        circleci-bundle-update-pr '<< parameters.git_user_name >>' << parameters.git_user_email >> $args
