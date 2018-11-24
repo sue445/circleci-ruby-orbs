@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.9...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.10...master)
+
+## v1.3.10
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.9...1.3.10)
+
+### `bundle-update-pr`
+* Fixed. can't expand environment variable
+  * https://github.com/sue445/circleci-ruby-orbs/pull/38
 
 ## v1.3.9
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.8...1.3.9)
