@@ -104,4 +104,4 @@ steps:
         args="$args --duplicate"
         <</ parameters.duplicate >>
 
-        circleci-bundle-update-pr '<< parameters.git_user_name >>' << parameters.git_user_email >> $args
+        circleci-bundle-update-pr "<< parameters.git_user_name >>" << parameters.git_user_email >> $args
