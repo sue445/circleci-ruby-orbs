@@ -1,0 +1,39 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: ruby:2.5-alpine
+
+jobs:
+  build:
+    executor:
+      name: default
+
+    steps:
+      - run:
+          name: Put Gemfile
+          # FIXME: '<<' is special character for CircleCI 2.1+. So `cat test.gemfile << EOS` does't work in config.yml...
+          command: |
+            echo 'source "https://rubygems.org"' >  Gemfile
+            echo 'gemspec'                       >> Gemfile
+
+      - run:
+          name: Put test.gemspec
+          command: |
+            echo 'Gem::Specification.new do |spec|'           >  test.gemspec
+            echo '  spec.name    = "test"'                    >> test.gemspec
+            echo '  spec.version = "0.0.1"'                   >> test.gemspec
+            echo '  spec.authors = ["sue445"]'                >> test.gemspec
+            echo '  spec.email   = ["sue445@example.com"]'    >> test.gemspec
+            echo '  spec.summary     = "test"'                >> test.gemspec
+            echo '  spec.description = "test"'                >> test.gemspec
+            echo '  spec.homepage    = "http://example.com"'  >> test.gemspec
+            echo '  spec.license     = "MIT"'                 >> test.gemspec
+            echo '  spec.add_development_dependency "rspec"'  >> test.gemspec
+            echo 'end'                                        >> test.gemspec
+
+      - ruby-orbs/bundle-install:
+          restore_bundled_with: false
+          with_gemfile_lock:    false
+          gemspec_name:         "test"
