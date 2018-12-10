@@ -1,7 +1,7 @@
 version: 2.1
 
 description: |
-  [IMPORTANT] THIS ORB IS DEPRECATED. USE https://github.com/sue445/circleci-ruby-orbs
+  [IMPORTANT] THIS ORB IS DEPRECATED. USE https://circleci.com/orbs/registry/orb/sue445/ruby-orbs
 
 commands:
   bundle-install:
