@@ -34,14 +34,36 @@ parameters:
     type: boolean
     default: true
     description: "Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI"
+  with_gemfile_lock:
+    type: boolean
+    default: true
+    description: "Whether using Gemfile.lock for cache key"
+  gemspec_name:
+    type: string
+    default: ""
+    description: "gemspec name (required if with_gemfile_lock is false)"
 
 steps:
-  - restore_cache:
-      keys:
-        - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
-        - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}
-        - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}
-        - << parameters.cache_key_prefix >>
+  - when:
+      condition: << parameters.with_gemfile_lock >>
+      steps:
+        - restore_cache:
+            keys:
+              - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
+              - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}
+              - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}
+              - << parameters.cache_key_prefix >>
+
+  - unless:
+      condition: << parameters.with_gemfile_lock >>
+      steps:
+        - restore_cache:
+            keys:
+              - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>" }}-{{ checksum "<< parameters.gemspec_name >>.gemspec" }}-{{ .Branch }}
+              - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>" }}-{{ checksum "<< parameters.gemspec_name >>.gemspec" }}
+              - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>" }}
+              - << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}
+              - << parameters.cache_key_prefix >>
 
   - run:
       name: bundle install
@@ -58,22 +80,58 @@ steps:
           bundle_install_args="$bundle_install_args $bundle_extra_args"
         fi
 
-        bundle install $bundle_install_args
+        with_gemfile_lock="false"
+        <<# parameters.with_gemfile_lock >>
+        with_gemfile_lock="true"
+        <</ parameters.with_gemfile_lock >>
+
+        if [ $with_gemfile_lock == "true" ]; then
+          bundle install $bundle_install_args
+        else
+          set +e
+          bundle install $bundle_install_args
+          ret=$?
+          set -e
+
+          # Retry with `bundle update` if `bundle install` is failed
+          if [ $ret -ne 0 ]; then
+            # NOTE: `.bundle/config` is not created after `bundle install` is failed
+            mkdir -p .bundle/
+            echo '---' > .bundle/config
+            echo 'BUNDLE_PATH: "<< parameters.bundle_path >>"' >> .bundle/config
+            bundle update --jobs=<< parameters.bundle_jobs >>
+          fi
+        fi
 
   - when:
       condition: << parameters.restore_bundled_with >>
       steps:
-        - run:
-            name: "restore-bundled-with"
-            command: |
-              set -xe
+        - when:
+            condition: << parameters.with_gemfile_lock >>
+            steps:
+              - run:
+                  name: "restore-bundled-with"
+                  command: |
+                    set -xe
 
-              if [ "<< parameters.bundle_gemfile >>" == "Gemfile" ]; then
-                gem install restore_bundled_with --no-document
-                restore-bundled-with
-              fi
+                    if [ "<< parameters.bundle_gemfile >>" == "Gemfile" ]; then
+                      gem install restore_bundled_with --no-document
+                      restore-bundled-with
+                    fi
 
-  - save_cache:
-      key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
-      paths:
-        - << parameters.bundle_path >>
+  - when:
+      condition: << parameters.with_gemfile_lock >>
+      steps:
+        - save_cache:
+            key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>.lock" }}-{{ .Branch }}
+            paths:
+              - << parameters.bundle_path >>
+
+  - unless:
+      condition: << parameters.with_gemfile_lock >>
+      steps:
+        - save_cache:
+            key: << parameters.cache_key_prefix >>-{{ .Environment.CIRCLE_JOB }}-{{ checksum "<< parameters.bundle_gemfile >>" }}-{{ checksum "<< parameters.gemspec_name >>.gemspec" }}-{{ .Branch }}
+            paths:
+              - << parameters.bundle_path >>
+              - Gemfile.lock

@@ -1,5 +1,5 @@
 description: |
-  Run `bundle install` using cache.
+  Run `bundle install` using cache for app repo. (`Gemfile.lock` is committed)
 
 usage:
   version: 2.1
