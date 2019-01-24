@@ -34,5 +34,5 @@ jobs:
             echo 'end'                                        >> test.gemspec
 
       - ruby-orbs/bundle-install:
-          with_gemfile_lock:    false
-          gemspec_name:         "test"
+          with_gemfile_lock: false
+          gemspec_name:      "test"
