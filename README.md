@@ -9,8 +9,6 @@ https://circleci.com/orbs/registry/orb/sue445/ruby-orbs
 ## Requirements
 * Ruby and bundler
   * recommend [circleci/ruby](https://hub.docker.com/r/circleci/ruby/)
-* `Gemfile.lock` in repo
-  * Not supported if `Gemfile.lock` is not committed (e.g. gem repo)
 
 ## Usage
 ### Common setting
@@ -31,6 +29,7 @@ orbs:
 ### bundle-install
 Run `bundle install` using cache.
 
+#### for app repo (`Gemfile.lock` is committed)
 ```yml
 # .circleci/config.yml
 jobs:
@@ -57,6 +56,36 @@ jobs:
       - run: bundle exec rspec
 ```
 
+#### for gem repo (`Gemfile.lock` is not committed)
+```yml
+# .circleci/config.yml
+jobs:
+  rspec:
+    docker:
+      - image: circleci/ruby
+
+    steps:
+      - checkout
+
+      - ruby-orbs/bundle-install:
+          with_gemfile_lock: false
+          gemspec_name: "yourgem"
+      # or
+      - ruby-orbs/bundle-install:
+          cache_key_prefix: "v1-bundle"
+          bundle_jobs: 4
+          bundle_retry: 3
+          bundle_path: "vendor/bundle"
+          with_gemfile_lock: false
+          gemspec_name: "yourgem"
+          bundle_clean: true
+          bundle_extra_args: ""
+          restore_bundled_with: true
+
+      # Add your job (e.g. rspec, rubocop)
+      - run: bundle exec rspec
+```
+
 #### Parameters
 * `cache_key_prefix` : Key prefix of cache (default: `v1-bundle`)
 * `bundle_jobs` : Passed to `bundle install --jobs` (default: `4`)
@@ -66,6 +95,8 @@ jobs:
 * `bundle_clean` : Whether pass `--clean` to `bundle install` (default: `true`)
 * `bundle_extra_args` : Arguments to pass to `bundle install` (defaut: `""`)
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
+* `with_gemfile_lock` : Whether using Gemfile.lock for cache key
+* `gemspec_name` : gemspec name (required if `with_gemfile_lock` is `false`)
 
 ### bundle-update-pr
 Run `bundle update` and send PullRequest.

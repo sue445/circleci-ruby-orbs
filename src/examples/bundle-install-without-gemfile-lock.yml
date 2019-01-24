@@ -1,5 +1,5 @@
 description: |
-  Run `bundle install` using cache for app repo. (`Gemfile.lock` is committed)
+  Run `bundle install` using cache for gem repo. (`Gemfile.lock` is not committed)
 
 usage:
   version: 2.1
@@ -16,11 +16,12 @@ usage:
         - checkout
 
         - ruby-orbs/bundle-install:
+            with_gemfile_lock: false
+            gemspec_name: "yourgem"
             cache_key_prefix: "v1-bundle"
             bundle_jobs: 4
             bundle_retry: 3
             bundle_path: "vendor/bundle"
-            bundle_gemfile: "Gemfile"
             bundle_clean: true
             bundle_extra_args: ""
             restore_bundled_with: true
