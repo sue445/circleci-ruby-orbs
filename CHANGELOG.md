@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.10...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.0...master)
+
+## v1.4.0
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.10...1.4.0)
+
+### `bundle-install`
+* Supports repo without `Gemfile.lock`
+  * https://github.com/sue445/circleci-ruby-orbs/pull/39
 
 ## v1.3.10
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.9...1.3.10)
