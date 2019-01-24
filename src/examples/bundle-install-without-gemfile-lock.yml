@@ -24,6 +24,5 @@ usage:
             bundle_path: "vendor/bundle"
             bundle_clean: true
             bundle_extra_args: ""
-            restore_bundled_with: true
 
         - run: bundle exec rspec

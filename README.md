@@ -80,7 +80,6 @@ jobs:
           gemspec_name: "yourgem"
           bundle_clean: true
           bundle_extra_args: ""
-          restore_bundled_with: true
 
       # Add your job (e.g. rspec, rubocop)
       - run: bundle exec rspec

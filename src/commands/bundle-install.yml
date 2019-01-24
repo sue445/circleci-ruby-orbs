@@ -106,15 +106,18 @@ steps:
   - when:
       condition: << parameters.restore_bundled_with >>
       steps:
-        - run:
-            name: "restore-bundled-with"
-            command: |
-              set -xe
+        - when:
+            condition: << parameters.with_gemfile_lock >>
+            steps:
+              - run:
+                  name: "restore-bundled-with"
+                  command: |
+                    set -xe
 
-              if [ "<< parameters.bundle_gemfile >>" == "Gemfile" ]; then
-                gem install restore_bundled_with --no-document
-                restore-bundled-with
-              fi
+                    if [ "<< parameters.bundle_gemfile >>" == "Gemfile" ]; then
+                      gem install restore_bundled_with --no-document
+                      restore-bundled-with
+                    fi
 
   - when:
       condition: << parameters.with_gemfile_lock >>
