@@ -19,7 +19,7 @@ version: 2.1
 orbs:
   # Use specific version
   # see. https://github.com/sue445/circleci-ruby-orbs/releases
-  ruby-orbs: sue445/ruby-orbs@1.3.0
+  ruby-orbs: sue445/ruby-orbs@1.4.0
 
   # or
   # Use latest version
