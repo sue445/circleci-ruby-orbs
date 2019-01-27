@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.0...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.2...master)
+
+## v1.4.2
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.0...1.4.2)
+
+### `bundle-install`
+* Add `update_always` param to `bundle-install`
+  * https://github.com/sue445/circleci-ruby-orbs/pull/40
 
 ## v1.4.0
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.3.10...1.4.0)
