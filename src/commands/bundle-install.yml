@@ -97,7 +97,7 @@ steps:
           run_bundle_install="false"
           <</ parameters.update_always >>
 
-          if [ run_bundle_install == "true" ]; then
+          if [ $run_bundle_install == "true" ]; then
             set +e
             bundle install $bundle_install_args
             ret=$?
