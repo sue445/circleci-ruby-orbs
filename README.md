@@ -72,12 +72,12 @@ jobs:
           gemspec_name: "yourgem"
       # or
       - ruby-orbs/bundle-install:
+          with_gemfile_lock: false
+          gemspec_name: "yourgem"
           cache_key_prefix: "v1-bundle"
           bundle_jobs: 4
           bundle_retry: 3
           bundle_path: "vendor/bundle"
-          with_gemfile_lock: false
-          gemspec_name: "yourgem"
           bundle_clean: true
           bundle_extra_args: ""
           update_always: false
