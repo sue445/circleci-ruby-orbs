@@ -36,3 +36,9 @@ jobs:
       - ruby-orbs/bundle-install:
           with_gemfile_lock: false
           gemspec_name:      "test"
+          update_always:     false
+
+      - ruby-orbs/bundle-install:
+          with_gemfile_lock: false
+          gemspec_name:      "test"
+          update_always:     true

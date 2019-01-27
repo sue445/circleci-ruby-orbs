@@ -80,6 +80,7 @@ jobs:
           gemspec_name: "yourgem"
           bundle_clean: true
           bundle_extra_args: ""
+          update_always: false
 
       # Add your job (e.g. rspec, rubocop)
       - run: bundle exec rspec
@@ -96,6 +97,7 @@ jobs:
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
 * `with_gemfile_lock` : Whether using Gemfile.lock for cache key
 * `gemspec_name` : gemspec name (required if `with_gemfile_lock` is `false`)
+* `update_always` : Whether run always `bundle update` when `with_gemfile_lock` is disabled
 
 ### bundle-update-pr
 Run `bundle update` and send PullRequest.
