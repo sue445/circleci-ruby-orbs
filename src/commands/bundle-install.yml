@@ -42,6 +42,10 @@ parameters:
     type: string
     default: ""
     description: "gemspec name (required if with_gemfile_lock is false)"
+  update_always:
+    type: boolean
+    default: false
+    description: "Whether run always `bundle update` when `with_gemfile_lock` is disabled"
 
 steps:
   - when:
@@ -88,10 +92,19 @@ steps:
         if [ $with_gemfile_lock == "true" ]; then
           bundle install $bundle_install_args
         else
-          set +e
-          bundle install $bundle_install_args
-          ret=$?
-          set -e
+          run_bundle_install="true"
+          <<# parameters.update_always >>
+          run_bundle_install="false"
+          <</ parameters.update_always >>
+
+          if [ run_bundle_install == "true" ]; then
+            set +e
+            bundle install $bundle_install_args
+            ret=$?
+            set -e
+          else
+            ret=1
+          fi
 
           # Retry with `bundle update` if `bundle install` is failed
           if [ $ret -ne 0 ]; then
