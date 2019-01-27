@@ -6,7 +6,7 @@ usage:
   version: 2.1
 
   orbs:
-    ruby-orbs: sue445/ruby-orbs@1.4.2
+    ruby-orbs: sue445/ruby-orbs@1.4.3
 
   workflows:
     version: 2
