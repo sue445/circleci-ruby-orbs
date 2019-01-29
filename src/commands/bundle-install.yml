@@ -49,6 +49,11 @@ parameters:
 
 steps:
   - when:
+      condition: << parameters.gemspec_name == "aaaa" >>
+      steps:
+        - run: echo hello
+
+  - when:
       condition: << parameters.with_gemfile_lock >>
       steps:
         - restore_cache:
