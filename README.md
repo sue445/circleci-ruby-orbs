@@ -3,6 +3,7 @@ CircleCI orb for ruby
 
 https://circleci.com/orbs/registry/orb/sue445/ruby-orbs
 
+[![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/sue445/ruby-orbs)](https://circleci.com/orbs/registry/orb/sue445/ruby-orbs) 
 [![CircleCI](https://circleci.com/gh/sue445/circleci-ruby-orbs/tree/master.svg?style=svg)](https://circleci.com/gh/sue445/circleci-ruby-orbs/tree/master)
 
 
