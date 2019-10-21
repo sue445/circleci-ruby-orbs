@@ -4,7 +4,7 @@ description: |
 parameters:
   version:
     type: string
-    default: ""
+    default: "latest"
     description: "circleci-bundle-update-pr vesion. default is latest"
 
 steps:
