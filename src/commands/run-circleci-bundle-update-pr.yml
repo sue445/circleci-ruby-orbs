@@ -31,15 +31,15 @@ parameters:
     default: "$CIRCLE_BRANCH"
     description: "Space separated branches. (e.g. 'master develop topic')"
   github_access_token:
-    type: string
-    default: "$GITHUB_ACCESS_TOKEN"
+    type: env_var_name
+    default: GITHUB_ACCESS_TOKEN
     description: |
-      Your GitHub personal access token.
+      Your GitHub personal access token as an env var on CircleCI.
       Go to your account's settings page (https://github.com/settings/tokens/new?description=circleci-bundle-update-pr%20token) and generate a personal access token with "repo" scope
   enterprise_octokit_access_token:
-    type: string
-    default: "$ENTERPRISE_OCTOKIT_ACCESS_TOKEN"
-    description: "Your GitHub Enterprise personal access token"
+    type: env_var_name
+    default: ENTERPRISE_OCTOKIT_ACCESS_TOKEN
+    description: "Your GitHub Enterprise personal access token as an env var on CircleCI"
   enterprise_octokit_api_endpoint:
     type: string
     default: "$ENTERPRISE_OCTOKIT_API_ENDPOINT"
