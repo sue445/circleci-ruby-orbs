@@ -1,5 +1,12 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.3...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.4...master)
+
+## v1.4.4
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.3...1.4.4)
+
+### `bundle-update-pr`
+* fix: use env_var_name instead of string to secure sensitive data
+  * https://github.com/sue445/circleci-ruby-orbs/pull/45
 
 ## v1.4.3
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.2...1.4.3)
