@@ -127,7 +127,7 @@ workflows:
             - ruby-orbs/bundle-install
           git_user_name: "yourname"
           git_user_email: "you@example.com"
-          github_access_token: "$GITHUB_ACCESS_TOKEN"
+          github_access_token: GITHUB_ACCESS_TOKEN
 ```
 
 #### Parameters
