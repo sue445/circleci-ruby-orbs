@@ -25,7 +25,7 @@ parameters:
   bundle_clean:
     type: boolean
     default: true
-    description: "Whether pass `--clean` to `bundle install`"
+    description: "Whether run `bundle config set clean 'true'`"
   bundle_extra_args:
     type: string
     default: ""
@@ -76,7 +76,7 @@ steps:
         bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >> --gemfile=<< parameters.bundle_gemfile >>"
 
         <<# parameters.bundle_clean >>
-        bundle_install_args="$bundle_install_args --clean"
+        bundle config set clean 'true'
         <</ parameters.bundle_clean >>
 
         bundle_extra_args="<< parameters.bundle_extra_args >>"
