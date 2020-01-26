@@ -42,7 +42,7 @@ jobs:
           name: Poll for result
           no_output_timeout: 5m
           command: |
-            export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}"
+            export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}_<< parameters.branch >>"
             echo "Smoke test branch: https://github.com/sue445/circleci-ruby-orbs-test/commits/${SMOKE_BRANCH}"
 
             curl https://circleci.com/api/v1.1/project/github/sue445/circleci-ruby-orbs-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json

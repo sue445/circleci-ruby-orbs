@@ -7,7 +7,7 @@ EOF
 chmod 600 ~/.ssh/config
 
 readonly SOURCE_BRANCH=$1
-export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}"
+export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}_${SOURCE_BRANCH}"
 
 git clone --branch $SOURCE_BRANCH git@github.com:sue445/circleci-ruby-orbs-test.git /tmp/circleci-ruby-orbs-test
 
@@ -17,7 +17,7 @@ git config push.default current
 git config user.name "CircleCI"
 git config user.email ${EMAIL}
 
-git checkout -b smoke_test/${CIRCLE_SHA1}
+git checkout -b ${SMOKE_BRANCH}
 
 sed -i -e "s/@volatile/@dev:${CIRCLE_SHA1}/g" .circleci/config.yml
 git add .circleci/config.yml
