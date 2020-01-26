@@ -17,7 +17,7 @@ parameters:
   bundle_path:
     type: string
     default: "vendor/bundle"
-    description: "Passed to `bundle install --path`"
+    description: "Passed to `bundle config set path`"
   bundle_gemfile:
     type: string
     default: "Gemfile"
@@ -73,7 +73,9 @@ steps:
       name: bundle install
       command: |
         set -xe
-        bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >> --gemfile=<< parameters.bundle_gemfile >>"
+        bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --gemfile=<< parameters.bundle_gemfile >>"
+
+        bundle config set path "<< parameters.bundle_path >>"
 
         <<# parameters.bundle_clean >>
         bundle config set clean 'true'
