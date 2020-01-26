@@ -34,3 +34,4 @@ jobs:
 
       - ruby-orbs/bundle-install:
           bundle_gemfile: "test.gemfile"
+          bundle_without: "development test"

@@ -22,6 +22,7 @@ usage:
             bundle_path: "vendor/bundle"
             bundle_gemfile: "Gemfile"
             bundle_clean: true
+            bundle_without: "development test"
             bundle_extra_args: ""
             restore_bundled_with: true
 
