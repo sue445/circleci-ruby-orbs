@@ -26,13 +26,17 @@ jobs:
     # c.f. https://github.com/CircleCI-Public/artifactory-orb/blob/39e72bee4c884eae0adde4c3204f0e18d727bc4b/.circleci/config.yml
     docker:
       - image: circleci/node:10
+    parameters:
+      branch:
+        type: string
+        description: branch of circleci-ruby-orbs-test
     working_directory: ~/app
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
           - "43:39:3a:d1:90:49:a4:85:db:17:41:ce:88:55:44:92"
-      - run: ./.circleci/setup_smoke_test.sh
+      - run: ./.circleci/setup_smoke_test.sh << parameters.branch >>
 
       - run:
           name: Poll for result
@@ -96,6 +100,13 @@ workflows:
           requires: [orb-tools/pack]
 
       - smoke_test:
+          name: smoke_test (bundler v2.1)
+          branch: master
+          requires: [orb-tools/test-in-builds]
+
+      - smoke_test:
+          name: smoke_test (bundler v1.17)
+          branch: bundler_1.17
           requires: [orb-tools/test-in-builds]
 
       - orb-tools/increment:
