@@ -17,7 +17,7 @@ parameters:
   bundle_path:
     type: string
     default: "vendor/bundle"
-    description: "Passed to `bundle config set path`"
+    description: "Passed to `bundle config --local path`"
   bundle_gemfile:
     type: string
     default: "Gemfile"
@@ -25,39 +25,39 @@ parameters:
   bundle_clean:
     type: boolean
     default: true
-    description: "Whether run `bundle config set clean 'true'`"
+    description: "Whether run `bundle config --local clean 'true'`"
   bundle_deployment:
     type: boolean
     default: false
-    description: "Whether run `bundle config set bundle_deployment 'true'`"
+    description: "Whether run `bundle config --local bundle_deployment 'true'`"
   bundle_frozen:
     type: boolean
     default: false
-    description: "Whether run `bundle config set frozen 'true'`"
+    description: "Whether run `bundle config --local frozen 'true'`"
   bundle_no_cache:
     type: boolean
     default: false
-    description: "Whether run `bundle config set no-cache 'true'`"
+    description: "Whether run `bundle config --local no-cache 'true'`"
   bundle_no_prune:
     type: boolean
     default: false
-    description: "Whether run `bundle config set no-prune 'true'`"
+    description: "Whether run `bundle config --local no-prune 'true'`"
   bundle_shebang:
     type: boolean
     default: false
-    description: "Whether run `bundle config set shebang 'true'`"
+    description: "Whether run `bundle config --local shebang 'true'`"
   bundle_system:
     type: boolean
     default: false
-    description: "Whether run `bundle config set system 'true'`"
+    description: "Whether run `bundle config --local system 'true'`"
   bundle_without:
     type: string
     default: ""
-    description: "Passed to `bundle config set without`"
+    description: "Passed to `bundle config --local without`"
   bundle_with:
     type: string
     default: ""
-    description: "Passed to `bundle config set with`"
+    description: "Passed to `bundle config --local with`"
   bundle_extra_args:
     type: string
     default: ""
@@ -107,44 +107,44 @@ steps:
         set -xe
         bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --gemfile=<< parameters.bundle_gemfile >>"
 
-        bundle config set path "<< parameters.bundle_path >>"
+        bundle config --local path "<< parameters.bundle_path >>"
 
         <<# parameters.bundle_clean >>
-        bundle config set clean 'true'
+        bundle config --local clean 'true'
         <</ parameters.bundle_clean >>
 
         <<# parameters.bundle_deployment >>
-        bundle config set bundle_deployment 'true'
+        bundle config --local bundle_deployment 'true'
         <</ parameters.bundle_deployment >>
 
         <<# parameters.bundle_frozen >>
-        bundle config set frozen 'true'
+        bundle config --local frozen 'true'
         <</ parameters.bundle_frozen >>
 
         <<# parameters.bundle_no_cache >>
-        bundle config set no-cache 'true'
+        bundle config --local no-cache 'true'
         <</ parameters.bundle_no_cache >>
 
         <<# parameters.bundle_no_prune >>
-        bundle config set no-prune 'true'
+        bundle config --local no-prune 'true'
         <</ parameters.bundle_no_prune >>
 
         <<# parameters.bundle_shebang >>
-        bundle config set shebang 'true'
+        bundle config --local shebang 'true'
         <</ parameters.bundle_shebang >>
 
         <<# parameters.bundle_system >>
-        bundle config set system 'true'
+        bundle config --local system 'true'
         <</ parameters.bundle_system >>
 
         bundle_without_param="<< parameters.bundle_without >>"
         if [ -n "$bundle_without_param" ]; then
-          bundle config set without "$bundle_without_param"
+          bundle config --local without "$bundle_without_param"
         fi
 
         bundle_with_param="<< parameters.bundle_with >>"
         if [ -n "$bundle_with_param" ]; then
-          bundle config set with "$bundle_with_param"
+          bundle config --local with "$bundle_with_param"
         fi
 
         bundle_extra_args="<< parameters.bundle_extra_args >>"
