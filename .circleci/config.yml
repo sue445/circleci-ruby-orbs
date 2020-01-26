@@ -6,7 +6,7 @@ orbs:
 jobs:
   push_latest_version_tag:
     docker:
-      - image: circleci/ruby:2.5
+      - image: circleci/ruby:2.7
     working_directory: ~/app
     steps:
       - checkout

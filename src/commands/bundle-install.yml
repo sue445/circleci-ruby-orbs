@@ -17,7 +17,7 @@ parameters:
   bundle_path:
     type: string
     default: "vendor/bundle"
-    description: "Passed to `bundle install --path`"
+    description: "Passed to `bundle config set path`"
   bundle_gemfile:
     type: string
     default: "Gemfile"
@@ -25,7 +25,39 @@ parameters:
   bundle_clean:
     type: boolean
     default: true
-    description: "Whether pass `--clean` to `bundle install`"
+    description: "Whether run `bundle config set clean 'true'`"
+  bundle_deployment:
+    type: boolean
+    default: false
+    description: "Whether run `bundle config set bundle_deployment 'true'`"
+  bundle_frozen:
+    type: boolean
+    default: false
+    description: "Whether run `bundle config set frozen 'true'`"
+  bundle_no_cache:
+    type: boolean
+    default: false
+    description: "Whether run `bundle config set no-cache 'true'`"
+  bundle_no_prune:
+    type: boolean
+    default: false
+    description: "Whether run `bundle config set no-prune 'true'`"
+  bundle_shebang:
+    type: boolean
+    default: false
+    description: "Whether run `bundle config set shebang 'true'`"
+  bundle_system:
+    type: boolean
+    default: false
+    description: "Whether run `bundle config set system 'true'`"
+  bundle_without:
+    type: string
+    default: ""
+    description: "Passed to `bundle config set without`"
+  bundle_with:
+    type: string
+    default: ""
+    description: "Passed to `bundle config set with`"
   bundle_extra_args:
     type: string
     default: ""
@@ -73,11 +105,47 @@ steps:
       name: bundle install
       command: |
         set -xe
-        bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >> --gemfile=<< parameters.bundle_gemfile >>"
+        bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --gemfile=<< parameters.bundle_gemfile >>"
+
+        bundle config set path "<< parameters.bundle_path >>"
 
         <<# parameters.bundle_clean >>
-        bundle_install_args="$bundle_install_args --clean"
+        bundle config set clean 'true'
         <</ parameters.bundle_clean >>
+
+        <<# parameters.bundle_deployment >>
+        bundle config set bundle_deployment 'true'
+        <</ parameters.bundle_deployment >>
+
+        <<# parameters.bundle_frozen >>
+        bundle config set frozen 'true'
+        <</ parameters.bundle_frozen >>
+
+        <<# parameters.bundle_no_cache >>
+        bundle config set no-cache 'true'
+        <</ parameters.bundle_no_cache >>
+
+        <<# parameters.bundle_no_prune >>
+        bundle config set no-prune 'true'
+        <</ parameters.bundle_no_prune >>
+
+        <<# parameters.bundle_shebang >>
+        bundle config set shebang 'true'
+        <</ parameters.bundle_shebang >>
+
+        <<# parameters.bundle_system >>
+        bundle config set system 'true'
+        <</ parameters.bundle_system >>
+
+        bundle_without_param="<< parameters.bundle_without >>"
+        if [ -n "$bundle_without_param" ]; then
+          bundle config set without "$bundle_without_param"
+        fi
+
+        bundle_with_param="<< parameters.bundle_with >>"
+        if [ -n "$bundle_with_param" ]; then
+          bundle config set with "$bundle_with_param"
+        fi
 
         bundle_extra_args="<< parameters.bundle_extra_args >>"
         if [ -n "$bundle_extra_args" ]; then
@@ -108,10 +176,6 @@ steps:
 
           # Retry with `bundle update` if `bundle install` is failed
           if [ $ret -ne 0 ]; then
-            # NOTE: `.bundle/config` is not created after `bundle install` is failed
-            mkdir -p .bundle/
-            echo '---' > .bundle/config
-            echo 'BUNDLE_PATH: "<< parameters.bundle_path >>"' >> .bundle/config
             bundle update --jobs=<< parameters.bundle_jobs >>
           fi
         fi

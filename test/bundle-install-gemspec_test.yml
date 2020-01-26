@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: ruby:2.5-alpine
+      - image: ruby:2.7-alpine
 
 jobs:
   build:
@@ -36,9 +36,11 @@ jobs:
       - ruby-orbs/bundle-install:
           with_gemfile_lock: false
           gemspec_name:      "test"
+          bundle_without:    "development test"
           update_always:     false
 
       - ruby-orbs/bundle-install:
           with_gemfile_lock: false
           gemspec_name:      "test"
+          bundle_without:    "development test"
           update_always:     true
