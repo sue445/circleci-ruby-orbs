@@ -6,9 +6,10 @@ StrictHostKeyChecking no
 EOF
 chmod 600 ~/.ssh/config
 
+readonly SOURCE_BRANCH=$1
 export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}"
 
-git clone git@github.com:sue445/circleci-ruby-orbs-test.git /tmp/circleci-ruby-orbs-test
+git clone --branch $SOURCE_BRANCH git@github.com:sue445/circleci-ruby-orbs-test.git /tmp/circleci-ruby-orbs-test
 
 cd /tmp/circleci-ruby-orbs-test
 
