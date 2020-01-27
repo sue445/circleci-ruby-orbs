@@ -17,7 +17,7 @@ parameters:
   bundle_path:
     type: string
     default: "vendor/bundle"
-    description: "Passed to `bundle install --path`"
+    description: "Passed to `bundle install --path` or use `bundle config set path`"
   bundle_gemfile:
     type: string
     default: "Gemfile"
@@ -25,7 +25,7 @@ parameters:
   bundle_clean:
     type: boolean
     default: true
-    description: "Whether pass `--clean` to `bundle install`"
+    description: "Whether pass `--clean` to `bundle install` or use `bundle config set --local clean 'true'`"
   bundle_extra_args:
     type: string
     default: ""
@@ -73,11 +73,34 @@ steps:
       name: bundle install
       command: |
         set -xe
-        bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --path=<< parameters.bundle_path >> --gemfile=<< parameters.bundle_gemfile >>"
+        if [ $(bundle -v | grep "Bundler version 1." | wc -l) = "1" ]; then
+          # bundler v1.x
+          use_bundle_config_set="0"
+        elif [ $(bundle -v | grep "Bundler version 2.0." | wc -l) = "1" ]; then
+          # bundler v2.0.x
+          use_bundle_config_set="0"
+        else
+          # bundler v2.1+
+          use_bundle_config_set="1"
+        fi
 
-        <<# parameters.bundle_clean >>
-        bundle_install_args="$bundle_install_args --clean"
-        <</ parameters.bundle_clean >>
+        bundle_install_args="--jobs=<< parameters.bundle_jobs >> --retry=<< parameters.bundle_retry >> --gemfile=<< parameters.bundle_gemfile >>"
+
+        if [ $use_bundle_config_set = "0" ]; then
+          bundle_install_args="$bundle_install_args --path=<< parameters.bundle_path >>"
+
+          <<# parameters.bundle_clean >>
+          bundle_install_args="$bundle_install_args --clean"
+          <</ parameters.bundle_clean >>
+        else
+          bundle config set path "<< parameters.bundle_path >>"
+
+          <<# parameters.bundle_clean >>
+          # NOTE: `--local` is required because `Cleaning all the gems on your system is dangerous!` error when `bundle install`
+          # c.f. https://app.circleci.com/jobs/github/sue445/circleci-ruby-orbs/1011
+          bundle config set --local clean 'true'
+          <</ parameters.bundle_clean >>
+        fi
 
         bundle_extra_args="<< parameters.bundle_extra_args >>"
         if [ -n "$bundle_extra_args" ]; then
