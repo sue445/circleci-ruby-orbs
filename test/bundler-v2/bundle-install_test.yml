@@ -34,3 +34,6 @@ jobs:
 
       - ruby-orbs/bundle-install:
           bundle_gemfile: "test.gemfile"
+
+      # Assert whether `vendor/bundle` are created
+      - run: ls -l vendor/bundle

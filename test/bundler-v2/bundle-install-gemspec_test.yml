@@ -42,3 +42,6 @@ jobs:
           with_gemfile_lock: false
           gemspec_name:      "test"
           update_always:     true
+
+      # Assert whether `vendor/bundle` are created
+      - run: ls -l vendor/bundle
