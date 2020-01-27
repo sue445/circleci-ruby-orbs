@@ -1,0 +1,36 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: ruby:2.7-alpine
+
+jobs:
+  build:
+    executor:
+      name: default
+
+    steps:
+      - run:
+          name: Put test.gemfile
+          # FIXME: '<<' is special character for CircleCI 2.1+. So `cat test.gemfile << EOS` does't work in config.yml...
+          command: |
+            echo 'source "https://rubygems.org"' >  test.gemfile
+            echo 'gem "sengiri_yaml"'            >> test.gemfile
+
+      - run:
+          name: Put test.gemfile.lock
+          command: |
+            echo 'GEM'                             >  test.gemfile.lock
+            echo '  remote: https://rubygems.org/' >> test.gemfile.lock
+            echo '  specs:'                        >> test.gemfile.lock
+            echo '    sengiri_yaml (0.0.3)'        >> test.gemfile.lock
+            echo ''                                >> test.gemfile.lock
+            echo 'PLATFORMS'                       >> test.gemfile.lock
+            echo '  ruby'                          >> test.gemfile.lock
+            echo ''                                >> test.gemfile.lock
+            echo 'DEPENDENCIES'                    >> test.gemfile.lock
+            echo '  sengiri_yaml'                  >> test.gemfile.lock
+
+      - ruby-orbs/bundle-install:
+          bundle_gemfile: "test.gemfile"
