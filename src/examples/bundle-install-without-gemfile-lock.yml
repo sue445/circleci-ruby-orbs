@@ -22,7 +22,6 @@ usage:
             bundle_jobs: 4
             bundle_retry: 3
             bundle_path: "vendor/bundle"
-            bundle_without: "development test"
             bundle_clean: true
             bundle_extra_args: ""
 
