@@ -50,7 +50,6 @@ jobs:
           bundle_path: "vendor/bundle"
           bundle_gemfile: "Gemfile"
           bundle_clean: true
-          bundle_without: "development test"
           bundle_extra_args: ""
           restore_bundled_with: true
 
@@ -92,18 +91,9 @@ jobs:
 * `cache_key_prefix` : Key prefix of cache (default: `v1-bundle`)
 * `bundle_jobs` : Passed to `bundle install --jobs` (default: `4`)
 * `bundle_retry` : Passed to `bundle install --retry` (default: `3`)
-* `bundle_path` : Passed to `bundle config set path` (default: `vendor/bundle`)
+* `bundle_path` : Passed to `bundle install --path` (default: `vendor/bundle`)
 * `bundle_gemfile` : Passed to `bundle install --gemfile` (default: `Gemfile`)
-* `bundle_clean` : Whether run `bundle config set clean 'true'` (default: `true`)
-* `bundle_deployment` : Whether run `bundle config set bundle_deployment 'true'`
-* `bundle_frozen` : Whether run `bundle config set frozen 'true'` (default: `false`)
-* `bundle_no_cache` : Whether run `bundle config set no-cache 'true'` (default: `false`)
-* `bundle_no_prune` : Whether run `bundle config set no-prune 'true'` (default: `false`)
-* `bundle_shebang` : Whether run `bundle config set shebang 'true'` (default: `false`)
-* `bundle_system` : Whether run `bundle config set system 'true'` (default: `false`)
-* `bundle_frozen` : Whether run `bundle config set frozen 'true'` (default: `false`)
-* `bundle_without` : Passed to `bundle config set without` (default: `""`)
-* `bundle_with` : Passed to `bundle config set with` (default: `""`)
+* `bundle_clean` : Whether pass `--clean` to `bundle install` (default: `true`)
 * `bundle_extra_args` : Arguments to pass to `bundle install` (defaut: `""`)
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
 * `with_gemfile_lock` : Whether using Gemfile.lock for cache key

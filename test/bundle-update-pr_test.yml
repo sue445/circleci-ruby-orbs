@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: ruby:2.7-alpine
+      - image: ruby:2.5-alpine
 
 jobs:
   build:
