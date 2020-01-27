@@ -81,11 +81,11 @@ workflows:
           orb-name: ruby-orbs
           test-steps:
             - orb-tools/local-test-build:
-                test-config-location: test/bundle-install_test.yml
+                test-config-location: test/bundler-v1/bundle-install_test.yml
             - orb-tools/local-test-build:
-                test-config-location: test/bundle-install-gemspec_test.yml
+                test-config-location: test/bundler-v1/bundle-install-gemspec_test.yml
             - orb-tools/local-test-build:
-                test-config-location: test/bundle-update-pr_test.yml
+                test-config-location: test/bundler-v1/bundle-update-pr_test.yml
           attach-workspace: true
           checkout: true
           requires:
