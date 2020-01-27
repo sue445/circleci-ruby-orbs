@@ -1,0 +1,15 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: ruby:2.7-alpine
+
+jobs:
+  build:
+    executor:
+      name: default
+
+    steps:
+      - ruby-orbs/install-circleci-bundle-update-pr:
+          version: "1.14.0"
