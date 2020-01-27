@@ -1,5 +1,13 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.0...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.2...master)
+
+## v1.5.2
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.0...v1.5.2)
+
+### `bundle-install`
+* Revert "Support bundler v2.1"
+  * https://github.com/sue445/circleci-ruby-orbs/pull/52
+  * :warning: v1.5.0 changes were reverted :pensive:
 
 ## v1.5.0
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.4.4...1.5.0)
