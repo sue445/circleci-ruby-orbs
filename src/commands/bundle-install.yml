@@ -131,10 +131,13 @@ steps:
 
           # Retry with `bundle update` if `bundle install` is failed
           if [ $ret -ne 0 ]; then
-            # NOTE: `.bundle/config` is not created after `bundle install` is failed
-            mkdir -p .bundle/
-            echo '---' > .bundle/config
-            echo 'BUNDLE_PATH: "<< parameters.bundle_path >>"' >> .bundle/config
+            if [ $use_bundle_config_set = "0" ]; then
+              # NOTE: `.bundle/config` is not created after `bundle install` is failed
+              mkdir -p .bundle/
+              echo '---' > .bundle/config
+              echo 'BUNDLE_PATH: "<< parameters.bundle_path >>"' >> .bundle/config
+            fi
+
             bundle update --jobs=<< parameters.bundle_jobs >>
           fi
         fi
