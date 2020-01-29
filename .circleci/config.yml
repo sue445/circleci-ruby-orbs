@@ -160,9 +160,6 @@ workflows:
           name: smoke_test (bundler v2.1)
           branch: master
           requires:
-            - Test test/bundler-v1/bundle-install_test.yml
-            - Test test/bundler-v1/bundle-install-gemspec_test.yml
-            - Test test/bundler-v1/bundle-update-pr_test.yml
             - Test test/bundler-v2/bundle-install_test.yml
             - Test test/bundler-v2/bundle-install-gemspec_test.yml
             - Test test/bundler-v2/bundle-update-pr_test.yml
@@ -174,9 +171,6 @@ workflows:
             - Test test/bundler-v1/bundle-install_test.yml
             - Test test/bundler-v1/bundle-install-gemspec_test.yml
             - Test test/bundler-v1/bundle-update-pr_test.yml
-            - Test test/bundler-v2/bundle-install_test.yml
-            - Test test/bundler-v2/bundle-install-gemspec_test.yml
-            - Test test/bundler-v2/bundle-update-pr_test.yml
 
       - orb-tools/increment:
           orb-path: packed/orb.yml
