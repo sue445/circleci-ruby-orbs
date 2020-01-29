@@ -77,19 +77,70 @@ workflows:
           artifact-path: packed/orb.yml
 
       - orb-tools/test-in-builds:
+          name: Test test/bundler-v1/bundle-install_test.yml
           orb-location: packed/orb.yml
           orb-name: ruby-orbs
           test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundler-v1/bundle-install_test.yml
+          attach-workspace: true
+          checkout: true
+          requires:
+            - orb-tools/pack
+
+      - orb-tools/test-in-builds:
+          name: Test test/bundler-v1/bundle-install-gemspec_test.yml
+          orb-location: packed/orb.yml
+          orb-name: ruby-orbs
+          test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundler-v1/bundle-install-gemspec_test.yml
+          attach-workspace: true
+          checkout: true
+          requires:
+            - orb-tools/pack
+
+      - orb-tools/test-in-builds:
+          name: Test test/bundler-v1/bundle-update-pr_test.yml
+          orb-location: packed/orb.yml
+          orb-name: ruby-orbs
+          test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundler-v1/bundle-update-pr_test.yml
+          attach-workspace: true
+          checkout: true
+          requires:
+            - orb-tools/pack
+
+      - orb-tools/test-in-builds:
+          name: Test test/bundler-v2/bundle-install_test.yml
+          orb-location: packed/orb.yml
+          orb-name: ruby-orbs
+          test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundler-v2/bundle-install_test.yml
+          attach-workspace: true
+          checkout: true
+          requires:
+            - orb-tools/pack
+
+      - orb-tools/test-in-builds:
+          name: Test test/bundler-v2/bundle-install-gemspec_test.yml
+          orb-location: packed/orb.yml
+          orb-name: ruby-orbs
+          test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundler-v2/bundle-install-gemspec_test.yml
+          attach-workspace: true
+          checkout: true
+          requires:
+            - orb-tools/pack
+
+      - orb-tools/test-in-builds:
+          name: Test test/bundler-v2/bundle-update-pr_test.yml
+          orb-location: packed/orb.yml
+          orb-name: ruby-orbs
+          test-steps:
             - orb-tools/local-test-build:
                 test-config-location: test/bundler-v2/bundle-update-pr_test.yml
           attach-workspace: true
@@ -108,12 +159,24 @@ workflows:
       - smoke_test:
           name: smoke_test (bundler v2.1)
           branch: master
-          requires: [orb-tools/test-in-builds]
+          requires:
+            - Test test/bundler-v1/bundle-install_test.yml
+            - Test test/bundler-v1/bundle-install-gemspec_test.yml
+            - Test test/bundler-v1/bundle-update-pr_test.yml
+            - Test test/bundler-v2/bundle-install_test.yml
+            - Test test/bundler-v2/bundle-install-gemspec_test.yml
+            - Test test/bundler-v2/bundle-update-pr_test.yml
 
       - smoke_test:
           name: smoke_test (bundler v1.17)
           branch: bundler_1.17
-          requires: [orb-tools/test-in-builds]
+          requires:
+            - Test test/bundler-v1/bundle-install_test.yml
+            - Test test/bundler-v1/bundle-install-gemspec_test.yml
+            - Test test/bundler-v1/bundle-update-pr_test.yml
+            - Test test/bundler-v2/bundle-install_test.yml
+            - Test test/bundler-v2/bundle-install-gemspec_test.yml
+            - Test test/bundler-v2/bundle-update-pr_test.yml
 
       - orb-tools/increment:
           orb-path: packed/orb.yml
@@ -122,7 +185,13 @@ workflows:
           publish-token-variable: "$CIRCLECI_API_TOKEN"
           attach-workspace: true
           checkout: false
-          requires: [orb-tools/test-in-builds]
+          requires:
+            - Test test/bundler-v1/bundle-install_test.yml
+            - Test test/bundler-v1/bundle-install-gemspec_test.yml
+            - Test test/bundler-v1/bundle-update-pr_test.yml
+            - Test test/bundler-v2/bundle-install_test.yml
+            - Test test/bundler-v2/bundle-install-gemspec_test.yml
+            - Test test/bundler-v2/bundle-update-pr_test.yml
           filters:
             branches:
               only: master
