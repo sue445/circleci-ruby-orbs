@@ -160,6 +160,7 @@ workflows:
           name: smoke_test (bundler v2.1)
           branch: master
           requires:
+            - orb-tools/publish
             - Test test/bundler-v2/bundle-install_test.yml
             - Test test/bundler-v2/bundle-install-gemspec_test.yml
             - Test test/bundler-v2/bundle-update-pr_test.yml
@@ -168,6 +169,7 @@ workflows:
           name: smoke_test (bundler v1.17)
           branch: bundler_1.17
           requires:
+            - orb-tools/publish
             - Test test/bundler-v1/bundle-install_test.yml
             - Test test/bundler-v1/bundle-install-gemspec_test.yml
             - Test test/bundler-v1/bundle-update-pr_test.yml
