@@ -37,11 +37,11 @@ parameters:
   with_gemfile_lock:
     type: boolean
     default: true
-    description: "Whether using Gemfile.lock for cache key"
+    description: "Whether using `Gemfile.lock` for cache key"
   gemspec_name:
     type: string
     default: ""
-    description: "gemspec name (required if with_gemfile_lock is false)"
+    description: "gemspec name (required if `with_gemfile_lock` is false)"
   update_always:
     type: boolean
     default: false

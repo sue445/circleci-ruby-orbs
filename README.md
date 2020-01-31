@@ -94,11 +94,11 @@ jobs:
 * `bundle_path` : Passed to `bundle install --path` (default: `vendor/bundle`)
 * `bundle_gemfile` : Passed to `bundle install --gemfile` (default: `Gemfile`)
 * `bundle_clean` : Whether pass `--clean` to `bundle install` (default: `true`)
-* `bundle_extra_args` : Arguments to pass to `bundle install` (defaut: `""`)
+* `bundle_extra_args` : Arguments to pass to `bundle install`
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
-* `with_gemfile_lock` : Whether using Gemfile.lock for cache key
-* `gemspec_name` : gemspec name (required if `with_gemfile_lock` is `false`)
-* `update_always` : Whether run always `bundle update` when `with_gemfile_lock` is disabled
+* `with_gemfile_lock` : Whether using `Gemfile.lock` for cache key (default: `true`)
+* `gemspec_name` : gemspec name (required if `with_gemfile_lock` is false)
+* `update_always` : Whether run always `bundle update` when `with_gemfile_lock` is disabled (default: `false`)
 
 ### bundle-update-pr
 Run `bundle update` and send PullRequest.
@@ -131,24 +131,24 @@ workflows:
 ```
 
 #### Parameters
-* `image` : Image for `bundle update` (default. `circleci/ruby`)
-* `pre-bundle-update-pr` : Run steps before `circleci-bundle-update-pr` (default. `[]`)
-* `post-bundle-update-pr` : Run steps after `circleci-bundle-update-pr` (default. `[]`)
-* `version` : circleci-bundle-update-pr vesion. (default. latest version)
-* `assignees` : Assign the PR to them. (e.g. alice,bob,carol) (default. `""`)
-* `reviewers` : Request PR review to them. (e.g. alice,bob,carol) (default. `""`)
-* `labels` : Add labels to the PR (e.g. In Review, Update) (default. `""`)
-* `duplicate` : Make PR even if it has already existed (default. `false`)
-* `git_user_name` : Username for commit (default. `$GIT_USER_NAME`)
-* `git_user_email` : E-mail for commit (default. `$GIT_USER_EMAIL`)
-* `branch` : Space separated branches. (e.g. `master develop topic`) (default. `$CIRCLE_BRANCH`)
-* `github_access_token` : Your GitHub personal access token as an env var on CircleCI (default. `GITHUB_ACCESS_TOKEN`)
+* `image` : Image for `bundle update` (default: `circleci/ruby`)
+* `pre-bundle-update-pr` : Run steps before `circleci-bundle-update-pr` (default: `[]`)
+* `post-bundle-update-pr` : Run steps after `circleci-bundle-update-pr` (default: `[]`)
+* `version` : circleci-bundle-update-pr vesion. default is latest
+* `assignees` : Assign the PR to them. (e.g. alice,bob,carol)
+* `reviewers` : Request PR review to them. (e.g. alice,bob,carol)
+* `labels` : Add labels to the PR (e.g. In Review, Update)
+* `duplicate` : Make PR even if it has already existed (default: `false`)
+* `git_user_name` : Username for commit (default: `$GIT_USER_NAME`)
+* `git_user_email` : E-mail for commit (default: `$GIT_USER_EMAIL`)
+* `branch` : Space separated branches. (e.g. `master develop topic`) (default: `$CIRCLE_BRANCH`)
+* `github_access_token` : Your GitHub personal access token as an env var on CircleCI (default: `GITHUB_ACCESS_TOKEN`)
   * Go to [your account's settings page](https://github.com/settings/tokens/new?description=circleci-bundle-update-pr%20token) and generate a personal access token with "repo" scope
   * Use the CircleCI UI to set the GITHUB_ACCESS_TOKEN environment variable.
 * `enterprise_octokit_access_token` : Your GitHub Enterprise personal access token as an env var on CircleCI (default. `ENTERPRISE_OCTOKIT_ACCESS_TOKEN`)
   * Use the CircleCI UI to set the ENTERPRISE_OCTOKIT_ACCESS_TOKEN environment variable.
-* `enterprise_octokit_api_endpoint` : Your GitHub Enterprise api endpoint (e.g. https://www.example.com/api/v3) (default. `$ENTERPRISE_OCTOKIT_API_ENDPOINT`)
-* `no_output_timeout` : Elapsed time the command can run without output. (e.g. 20m, 1.25h, 5s) (default. `10m`)
+* `enterprise_octokit_api_endpoint` : Your GitHub Enterprise api endpoint (e.g. https://www.example.com/api/v3) (default: `$ENTERPRISE_OCTOKIT_API_ENDPOINT`)
+* `no_output_timeout` : Elapsed time the command can run without output. (e.g. 20m, 1.25h, 5s) (default: `10m`)
 
 ## External
 * Smoke test repository for circleci-ruby-orbs
