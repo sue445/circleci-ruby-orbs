@@ -91,9 +91,9 @@ jobs:
 * `cache_key_prefix` : Key prefix of cache (default: `v1-bundle`)
 * `bundle_jobs` : Passed to `bundle install --jobs` (default: `4`)
 * `bundle_retry` : Passed to `bundle install --retry` (default: `3`)
-* `bundle_path` : Passed to `bundle install --path` (default: `vendor/bundle`)
+* `bundle_path` : Passed to `bundle install --path` or use `bundle config set path` (default: `vendor/bundle`)
 * `bundle_gemfile` : Passed to `bundle install --gemfile` (default: `Gemfile`)
-* `bundle_clean` : Whether pass `--clean` to `bundle install` (default: `true`)
+* `bundle_clean` : Whether pass `--clean` to `bundle install` or use `bundle config set --local clean 'true'` (default: `true`)
 * `bundle_extra_args` : Arguments to pass to `bundle install`
 * `restore_bundled_with` : Whether resolve bundler version difference between `Gemfile.lock` and pre-installed in CI (default: `true`)
 * `with_gemfile_lock` : Whether using `Gemfile.lock` for cache key (default: `true`)
