@@ -23,6 +23,7 @@ usage:
             bundle_retry: 3
             bundle_path: "vendor/bundle"
             bundle_clean: true
+            bundle_without: development test
             bundle_extra_args: ""
 
         - run: bundle exec rspec
