@@ -2,7 +2,7 @@
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.6.0...master)
 
 ## v1.6.0
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.2...v1.6.0)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.2...1.6.0)
 
 * Resolved deprecation warning on bundler 2.1+
     * https://github.com/sue445/circleci-ruby-orbs/pull/54
@@ -19,7 +19,7 @@
         * `bundle_with`
 
 ## v1.5.2
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.0...v1.5.2)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.0...1.5.2)
 
 ### `bundle-install`
 * Revert "Support bundler v2.1"
