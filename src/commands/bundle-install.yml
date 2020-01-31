@@ -26,6 +26,38 @@ parameters:
     type: boolean
     default: true
     description: "Whether pass `--clean` to `bundle install` or use `bundle config set --local clean 'true'`"
+  bundle_deployment:
+    type: boolean
+    default: false
+    description: "Whether path to `--deployment` or run `bundle config set deployment 'true'`"
+  bundle_frozen:
+    type: boolean
+    default: false
+    description: "Whether path to `--frozen` or  run `bundle config set frozen 'true'`"
+  bundle_no_cache:
+    type: boolean
+    default: false
+    description: "Whether path to `--no-cache` or  run `bundle config set no-cache 'true'`"
+  bundle_no_prune:
+    type: boolean
+    default: false
+    description: "Whether path to `--no-prune` or  run `bundle config set no-prune 'true'`"
+  bundle_shebang:
+    type: boolean
+    default: false
+    description: "Whether path to `--shebang` or  run `bundle config set shebang 'true'`"
+  bundle_system:
+    type: boolean
+    default: false
+    description: "Whether path to `--system` or  run `bundle config set system 'true'`"
+  bundle_without:
+    type: string
+    default: ""
+    description: "Passed to `bundle install --without` or `bundle config set without`"
+  bundle_with:
+    type: string
+    default: ""
+    description: "Passed to `bundle install --with` or `bundle config set with`"
   bundle_extra_args:
     type: string
     default: ""
@@ -92,6 +124,40 @@ steps:
           <<# parameters.bundle_clean >>
           bundle_install_args="$bundle_install_args --clean"
           <</ parameters.bundle_clean >>
+
+          <<# parameters.bundle_deployment >>
+          bundle_install_args="$bundle_install_args --deployment"
+          <</ parameters.bundle_deployment >>
+
+          <<# parameters.bundle_frozen >>
+          bundle_install_args="$bundle_install_args --frozen"
+          <</ parameters.bundle_frozen >>
+
+          <<# parameters.bundle_no_cache >>
+          bundle_install_args="$bundle_install_args --no-cache"
+          <</ parameters.bundle_no_cache >>
+
+          <<# parameters.bundle_no_prune >>
+          bundle_install_args="$bundle_install_args --no-prune"
+          <</ parameters.bundle_no_prune >>
+
+          <<# parameters.bundle_shebang >>
+          bundle_install_args="$bundle_install_args --shebang"
+          <</ parameters.bundle_shebang >>
+
+          <<# parameters.bundle_system >>
+          bundle_install_args="$bundle_install_args --system"
+          <</ parameters.bundle_system >>
+
+          bundle_without_param="<< parameters.bundle_without >>"
+          if [ -n "$bundle_without_param" ]; then
+            bundle_install_args="$bundle_install_args --without $bundle_without_param"
+          fi
+
+          bundle_with_param="<< parameters.bundle_with >>"
+          if [ -n "$bundle_with_param" ]; then
+            bundle_install_args="$bundle_install_args --with $bundle_with_param"
+          fi
         else
           bundle config set path "<< parameters.bundle_path >>"
 
@@ -100,6 +166,40 @@ steps:
           # c.f. https://app.circleci.com/jobs/github/sue445/circleci-ruby-orbs/1011
           bundle config set --local clean 'true'
           <</ parameters.bundle_clean >>
+
+          <<# parameters.bundle_deployment >>
+          bundle config set bundle_deployment 'true'
+          <</ parameters.bundle_deployment >>
+
+          <<# parameters.bundle_frozen >>
+          bundle config set frozen 'true'
+          <</ parameters.bundle_frozen >>
+
+          <<# parameters.bundle_no_cache >>
+          bundle config set no-cache 'true'
+          <</ parameters.bundle_no_cache >>
+
+          <<# parameters.bundle_no_prune >>
+          bundle config set no-prune 'true'
+          <</ parameters.bundle_no_prune >>
+
+          <<# parameters.bundle_shebang >>
+          bundle config set shebang 'true'
+          <</ parameters.bundle_shebang >>
+
+          <<# parameters.bundle_system >>
+          bundle config set system 'true'
+          <</ parameters.bundle_system >>
+
+          bundle_without_param="<< parameters.bundle_without >>"
+          if [ -n "$bundle_without_param" ]; then
+            bundle config set without "$bundle_without_param"
+          fi
+
+          bundle_with_param="<< parameters.bundle_with >>"
+          if [ -n "$bundle_with_param" ]; then
+            bundle config set with "$bundle_with_param"
+          fi
         fi
 
         bundle_extra_args="<< parameters.bundle_extra_args >>"
