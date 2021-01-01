@@ -155,6 +155,7 @@ workflows:
           attach-workspace: true
           checkout: false
           requires: [orb-tools/pack]
+          context: CircleCI
 
       - smoke_test:
           name: smoke_test (bundler v2.1)
@@ -225,3 +226,4 @@ workflows:
               only: /^[0-9.]+\.0$/
             branches:
               ignore: /.*/
+          context: CircleCI
