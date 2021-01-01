@@ -201,6 +201,7 @@ workflows:
               only: master
             tags:
               ignore: /.*/
+          context: CircleCI
 
   release:
     jobs:
