@@ -192,6 +192,7 @@ workflows:
           filters:
             branches:
               only: master
+          context: CircleCI
 
       - push_latest_version_tag:
           requires: [orb-tools/increment]
