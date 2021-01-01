@@ -1,5 +1,11 @@
 ## Unreleased
-[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.6.0...master)
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.6.1...master)
+
+## v1.6.1
+[full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.6.0...1.6.1)
+
+* [Resolved] `open': can't modify frozen Hash: {} (FrozenError)
+  * https://github.com/sue445/circleci-ruby-orbs/pull/61
 
 ## v1.6.0
 [full changelog](http://github.com/sue445/circleci-ruby-orbs/compare/1.5.2...1.6.0)
