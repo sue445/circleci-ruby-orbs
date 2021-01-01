@@ -254,6 +254,7 @@ steps:
                     set -xe
 
                     if [ "<< parameters.bundle_gemfile >>" == "Gemfile" ]; then
+                      gem install git --version 1.7.0 --no-document
                       gem install restore_bundled_with --no-document
                       restore-bundled-with
                     fi
