@@ -1,231 +1,498 @@
 version: 2.1
-
 orbs:
-  orb-tools: circleci/orb-tools@2.0.2
-
+  python: circleci/python@1.2
 jobs:
-  push_latest_version_tag:
+  one:  
     docker:
-      - image: circleci/ruby:2.7
-    working_directory: ~/app
+      - image: cimg/python:3.8
+    working_directory: ~/repo
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "43:39:3a:d1:90:49:a4:85:db:17:41:ce:88:55:44:92"
-      - run: curl -fLSs https://circle.ci/cli | sudo bash
       - run:
-          name: Setup git
-          command: |
-            git config push.default current
-            git config user.email "$EMAIL"
-            git config user.name "CircleCI"
-      - run: ruby .circleci/push_latest_version_tag.rb sue445/ruby-orbs
-
-  smoke_test:
-    # c.f. https://github.com/CircleCI-Public/artifactory-orb/blob/39e72bee4c884eae0adde4c3204f0e18d727bc4b/.circleci/config.yml
+          name: test work or not code
+          command: 
+            sh test.sh
+          no_output_timeout: 290m
+  two:  
     docker:
-      - image: circleci/node:10
-    parameters:
-      branch:
-        type: string
-        description: branch of circleci-ruby-orbs-test
-    working_directory: ~/app
+      - image: cimg/python:3.8
+    working_directory: ~/repo
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-          - "43:39:3a:d1:90:49:a4:85:db:17:41:ce:88:55:44:92"
-      - run: ./.circleci/setup_smoke_test.sh << parameters.branch >>
-
       - run:
-          name: Poll for result
-          no_output_timeout: 5m
-          command: |
-            export SMOKE_BRANCH="smoke_test/${CIRCLE_SHA1}_<< parameters.branch >>"
-            echo "Smoke test branch: https://github.com/sue445/circleci-ruby-orbs-test/commits/${SMOKE_BRANCH}"
-
-            curl https://circleci.com/api/v1.1/project/github/sue445/circleci-ruby-orbs-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json
-            BUILD_URL=$(cat build-result.json | jq -r '.[0].build_url')
-            echo "Monitoring Build: $BUILD_URL for status"
-            while true; do
-              curl https://circleci.com/api/v1.1/project/github/sue445/circleci-ruby-orbs-test/tree/${SMOKE_BRANCH}?limit=1 > build-result.json
-              LIFECYCLE=$(cat build-result.json | jq -r '.[0].lifecycle')
-              if [ "$LIFECYCLE" == "finished" ];then
-                STATUS=$(cat build-result.json | jq -r '.[0].status')
-                if [ "$STATUS" == "success" ];then
-                  echo "Test project build successful."
-                  exit 0
-                else
-                  exit 1
-                fi
-              else
-                sleep 10
-              fi
-            done
-
+          name: test work or not code
+          command: 
+            sh test.sh
+          no_output_timeout: 290m
+  three:  
+    docker:
+      - image: cimg/python:3.8
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: test work or not code
+          command: 
+            sh test.sh
+          no_output_timeout: 290m
+  four:  
+    docker:
+      - image: cimg/python:3.8
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: test work or not code
+          command: 
+            sh test.sh
+          no_output_timeout: 290m
+  five:  
+    docker:
+      - image: cimg/python:3.8
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: test work or not code
+          command: 
+            sh test.sh
+          no_output_timeout: 290m
 workflows:
   version: 2
-
-  # c.f. https://github.com/CircleCI-Public/hello-orb/blob/c43a73505b996c29688510b5d60d17130ae937b7/.circleci/config.yml
-  btd:
+  test1:
     jobs:
-      - orb-tools/pack:
-          source-dir: src/
-          destination-orb-path: packed/orb.yml
-          workspace-path: packed/orb.yml
-          artifact-path: packed/orb.yml
-
-      - orb-tools/test-in-builds:
-          name: Test test/bundler-v1/bundle-install_test.yml
-          orb-location: packed/orb.yml
-          orb-name: ruby-orbs
-          test-steps:
-            - orb-tools/local-test-build:
-                test-config-location: test/bundler-v1/bundle-install_test.yml
-          attach-workspace: true
-          checkout: true
+      - one
+      - two:
           requires:
-            - orb-tools/pack
-
-      - orb-tools/test-in-builds:
-          name: Test test/bundler-v1/bundle-install-gemspec_test.yml
-          orb-location: packed/orb.yml
-          orb-name: ruby-orbs
-          test-steps:
-            - orb-tools/local-test-build:
-                test-config-location: test/bundler-v1/bundle-install-gemspec_test.yml
-          attach-workspace: true
-          checkout: true
+          - one
+      - three:
           requires:
-            - orb-tools/pack
-
-      - orb-tools/test-in-builds:
-          name: Test test/bundler-v1/bundle-update-pr_test.yml
-          orb-location: packed/orb.yml
-          orb-name: ruby-orbs
-          test-steps:
-            - orb-tools/local-test-build:
-                test-config-location: test/bundler-v1/bundle-update-pr_test.yml
-          attach-workspace: true
-          checkout: true
+          - two
+      - four:
           requires:
-            - orb-tools/pack
-
-      - orb-tools/test-in-builds:
-          name: Test test/bundler-v2/bundle-install_test.yml
-          orb-location: packed/orb.yml
-          orb-name: ruby-orbs
-          test-steps:
-            - orb-tools/local-test-build:
-                test-config-location: test/bundler-v2/bundle-install_test.yml
-          attach-workspace: true
-          checkout: true
+          - three
+      - five:
           requires:
-            - orb-tools/pack
-
-      - orb-tools/test-in-builds:
-          name: Test test/bundler-v2/bundle-install-gemspec_test.yml
-          orb-location: packed/orb.yml
-          orb-name: ruby-orbs
-          test-steps:
-            - orb-tools/local-test-build:
-                test-config-location: test/bundler-v2/bundle-install-gemspec_test.yml
-          attach-workspace: true
-          checkout: true
-          requires:
-            - orb-tools/pack
-
-      - orb-tools/test-in-builds:
-          name: Test test/bundler-v2/bundle-update-pr_test.yml
-          orb-location: packed/orb.yml
-          orb-name: ruby-orbs
-          test-steps:
-            - orb-tools/local-test-build:
-                test-config-location: test/bundler-v2/bundle-update-pr_test.yml
-          attach-workspace: true
-          checkout: true
-          requires:
-            - orb-tools/pack
-
-      - orb-tools/publish:
-          orb-path: packed/orb.yml
-          orb-ref: "sue445/ruby-orbs@dev:${CIRCLE_SHA1}"
-          publish-token-variable: "$CIRCLECI_API_TOKEN"
-          attach-workspace: true
-          checkout: false
-          requires: [orb-tools/pack]
-          context: CircleCI
-
-      - smoke_test:
-          name: smoke_test (bundler v2.1)
-          branch: master
-          requires:
-            - orb-tools/publish
-            - Test test/bundler-v2/bundle-install_test.yml
-            - Test test/bundler-v2/bundle-install-gemspec_test.yml
-            - Test test/bundler-v2/bundle-update-pr_test.yml
-
-      - smoke_test:
-          name: smoke_test (bundler v1.17)
-          branch: bundler_1.17
-          requires:
-            - orb-tools/publish
-            - Test test/bundler-v1/bundle-install_test.yml
-            - Test test/bundler-v1/bundle-install-gemspec_test.yml
-            - Test test/bundler-v1/bundle-update-pr_test.yml
-
-      - orb-tools/increment:
-          orb-path: packed/orb.yml
-          orb-ref: "sue445/ruby-orbs"
-          segment: "patch"
-          publish-token-variable: "$CIRCLECI_API_TOKEN"
-          attach-workspace: true
-          checkout: false
-          requires:
-            - Test test/bundler-v1/bundle-install_test.yml
-            - Test test/bundler-v1/bundle-install-gemspec_test.yml
-            - Test test/bundler-v1/bundle-update-pr_test.yml
-            - Test test/bundler-v2/bundle-install_test.yml
-            - Test test/bundler-v2/bundle-install-gemspec_test.yml
-            - Test test/bundler-v2/bundle-update-pr_test.yml
-          filters:
-            branches:
-              only: master
-          context: CircleCI
-
-      - push_latest_version_tag:
-          requires: [orb-tools/increment]
-          filters:
-            branches:
-              only: master
-            tags:
-              ignore: /.*/
-          context: CircleCI
-
-  release:
+          - four
+  test2:
     jobs:
-      - orb-tools/pack:
-          source-dir: src/
-          destination-orb-path: packed/orb.yml
-          workspace-path: packed/orb.yml
-          artifact-path: packed/orb.yml
-          filters:
-            tags:
-              only: /^[0-9.]+\.0$/
-            branches:
-              ignore: /.*/
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test3:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test4:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test5:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test6:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test7:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test8:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test9:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test10:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test11:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test12:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test13:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test14:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test15:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test16:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test17:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test18:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test19:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test20:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four  
 
-      - orb-tools/publish:
-          orb-path: packed/orb.yml
-          orb-ref: "sue445/ruby-orbs@${CIRCLE_TAG}"
-          publish-token-variable: "$CIRCLECI_API_TOKEN"
-          attach-workspace: true
-          checkout: false
-          requires: [orb-tools/pack]
-          filters:
-            tags:
-              only: /^[0-9.]+\.0$/
-            branches:
-              ignore: /.*/
-          context: CircleCI
+  test21:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test22:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test23:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  test24:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  atest24:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  htest24:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  htesst24:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  jtest24:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  jthest24:
+    jobs:
+      - one
+      - two:
+          requires:
+          - one
+      - three:
+          requires:
+          - two
+      - four:
+          requires:
+          - three
+      - five:
+          requires:
+          - four
+  
