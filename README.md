@@ -9,7 +9,7 @@ https://circleci.com/orbs/registry/orb/sue445/ruby-orbs
 
 ## Requirements
 * Ruby and bundler
-  * recommend [circleci/ruby](https://hub.docker.com/r/circleci/ruby/)
+  * recommend [cimg/ruby](https://hub.docker.com/r/cimg/ruby/)
 
 ## Usage
 ### Common setting
